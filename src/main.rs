@@ -1,3 +1,10 @@
+mod cars;
+mod roads;
+mod traffic_lights;
+mod intersection;
+
+use intersection::Intersection;
+
 use sdl2::{event::Event, keyboard::Keycode,
 init, pixels::Color, rect::Rect, rect::Point};
 
