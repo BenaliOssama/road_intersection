@@ -4,16 +4,17 @@ pub enum LightState {
     Green,
 }
 
+#[derive(Clone)]
 pub struct TrafficLight {
     pub state: LightState,
-    pub timer: u32, // simple timer in ticks or ms
+    pub timer: f32, // simple timer in ticks or ms
 }
 
 impl TrafficLight {
     pub fn new() -> Self {
         TrafficLight {
             state: LightState::Red,
-            timer: 0,
+            timer: 0.0,
         }
     }
 
@@ -22,10 +23,10 @@ impl TrafficLight {
             LightState::Red => LightState::Green,
             LightState::Green => LightState::Red,
         };
-        self.timer = 0;
+        self.timer = 0.0;
     }
 
-    pub fn update(&mut self, delta_time: u32) {
+    pub fn update(&mut self, delta_time: f32) {
         self.timer += delta_time;
         // Implement logic to switch state based on timer here
     }

@@ -1,6 +1,7 @@
 mod roads;
 mod cars;
 mod intersection;
+mod traffic_lights;
 
 use sdl2::{event::Event, keyboard::Keycode, init, pixels::Color, rect::Point};
 use std::time::Instant;
