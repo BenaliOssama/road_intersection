@@ -22,9 +22,6 @@ fn main() {
 
     // Create a road and add some cars
     let mut road = Road::new();
-    road.add_car(Car::new(CarColor::Yellow, 375, 0.0, 60.0));
-    road.add_car(Car::new(CarColor::Blue, 375, -120.0, 60.0));
-    road.add_car(Car::new(CarColor::Red, 375, -240.0, 60.0));
 
     let mut last_time = Instant::now();
 
@@ -51,8 +48,13 @@ fn main() {
 
         for event in event_pump.poll_iter() {
             match event {
+                // quite
                 Event::Quit { .. }
                 | Event::KeyDown { keycode: Some(Keycode::Escape), .. } => break 'running,
+                // add car up
+                Event::KeyUp { keycode: Some(Keycode::Up), .. } => {
+                    road.add_car(Car::new(CarColor::Yellow, 375, 0.0, 60.0));
+                }
                 _ => {}
             }
         }
