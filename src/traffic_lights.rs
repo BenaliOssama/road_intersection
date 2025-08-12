@@ -1,3 +1,6 @@
+use sdl2::{pixels::Color, rect::Rect};
+
+
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
 pub enum LightState {
     Red,
@@ -8,14 +11,26 @@ pub enum LightState {
 pub struct TrafficLight {
     pub state: LightState,
     pub timer: f32, // simple timer in ticks or ms
+    pos : (i32, i32),
 }
 
 impl TrafficLight {
-    pub fn new() -> Self {
+    pub fn new(pos: (i32, i32)) -> Self {
         TrafficLight {
             state: LightState::Red,
             timer: 0.0,
+            pos: pos,
         }
+    }
+
+    pub fn draw(&self, canvas: &mut sdl2::render::Canvas<sdl2::video::Window>) {
+        let color = Color::RGB(255, 255, 0);
+
+        canvas.set_draw_color(color);
+
+        let rect = Rect::new(self.pos.0 , self.pos.1, 50, 50);
+
+        canvas.fill_rect(rect).unwrap();
     }
 
     pub fn switch(&mut self) {

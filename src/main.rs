@@ -8,6 +8,7 @@ use std::time::Instant;
 
 use crate::cars::{Car, CarColor};
 use crate::roads::Road;
+use crate::intersection::{Intersection};
 
 fn main() {
     let sdl_context = init().unwrap();
@@ -23,7 +24,8 @@ fn main() {
     let mut event_pump = sdl_context.event_pump().unwrap();
 
     // Create a road and add some cars
-    let mut road = Road::new((800, 600));
+    //let mut road = Road::new((800, 600));
+    let mut intersection = Intersection::new((800, 600));
 
     let mut last_time = Instant::now();
 
@@ -32,7 +34,7 @@ fn main() {
         let dt = now.duration_since(last_time).as_secs_f32();
         last_time = now;
 
-        road.update(dt);
+        intersection.update(dt);
 
         // Clear screen
         canvas.set_draw_color(Color::RGB(0, 0, 0));
@@ -44,7 +46,7 @@ fn main() {
         canvas.draw_line(Point::new(425, 0), Point::new(425, 600)).unwrap();
 
         // Draw all cars on the road
-        road.draw(&mut canvas);
+        intersection.draw(&mut canvas);
 
         canvas.present();
 
@@ -55,7 +57,7 @@ fn main() {
                 | Event::KeyDown { keycode: Some(Keycode::Escape), .. } => break 'running,
                 // add car up
                 Event::KeyUp { keycode: Some(Keycode::Up), .. } => {
-                    road.add_car(Car::new(CarColor::Yellow, 375, 0.0, 60.0));
+                    intersection.add_car();
                 }
                 _ => {}
             }
