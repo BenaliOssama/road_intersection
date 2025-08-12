@@ -5,7 +5,7 @@ mod traffic_lights;
 
 use sdl2::{event::Event, keyboard::Keycode, init, pixels::Color, rect::Point};
 use std::time::Instant;
-use crate::intersection::*;//Intersection;
+use crate::intersection::*;
 
 fn main() {
     let sdl_context = init().unwrap();

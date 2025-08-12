@@ -45,11 +45,13 @@ impl Car {
         }
     }
 
-    fn stop(&mut self){
+    #[allow(dead_code)]
+    pub fn stop(&mut self){
         self.moving = false;
     }
 
-    fn start(&mut self){
+    #[allow(dead_code)]
+    pub fn start(&mut self){
         self.moving = true;
     }
 }

@@ -25,7 +25,7 @@ impl Intersection {
         Intersection { roads, traffic_lights }
     }
 
-    pub fn add_car_from_direction(&mut self, dir: Direction) {
+    pub fn add_car_from_direction(&mut self, _dir: Direction) {
         for road in &mut self.roads {
             road.add_car(Car::new(CarColor::Yellow, 375, 0.0, 60.0));
         }

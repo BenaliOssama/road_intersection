@@ -1,6 +1,6 @@
 use sdl2::{pixels::Color, rect::Rect};
 
-
+#[allow(dead_code)]
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
 pub enum LightState {
     Red,
@@ -22,7 +22,7 @@ impl TrafficLight {
             pos: pos,
         }
     }
-
+    #[allow(dead_code)]
     pub fn draw(&self, canvas: &mut sdl2::render::Canvas<sdl2::video::Window>) {
         let color = Color::RGB(255, 255, 0);
 
@@ -33,6 +33,7 @@ impl TrafficLight {
         canvas.fill_rect(rect).unwrap();
     }
 
+    #[allow(dead_code)]
     pub fn switch(&mut self) {
         self.state = match self.state {
             LightState::Red => LightState::Green,
