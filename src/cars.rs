@@ -9,6 +9,7 @@ pub enum CarColor {
     White,
 }
 
+#[derive(Debug, Clone, Copy)]
 pub struct Car {
     pub color: CarColor,
     pub x: i32,
