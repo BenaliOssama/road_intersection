@@ -1,11 +1,21 @@
 use crate::{roads::Road , traffic_lights::TrafficLight};
 use crate::{cars::Car};//, traffic_lights::TrafficLight};
-use crate::CarColor;
+
+//use crate::cars;
+use crate::cars::CarColor;
+
+pub enum Direction {
+    North,
+    South,
+    East,
+    West,
+}
 
 pub struct Intersection {
     pub roads: Vec<Road>,
     pub traffic_lights: Vec<TrafficLight>,
 }
+
 impl Intersection {
     pub fn new(size: (i32, i32)) -> Self {
         let road = Road::new(size);
@@ -15,12 +25,15 @@ impl Intersection {
         Intersection { roads, traffic_lights }
     }
 
-    pub fn add_car(&mut self) {
+    pub fn add_car_from_direction(&mut self, dir: Direction) {
         for road in &mut self.roads {
             road.add_car(Car::new(CarColor::Yellow, 375, 0.0, 60.0));
         }
     }
-
+    
+    pub fn add_car_from_random_direction(&mut self) {
+        // Randomly pick a direction and add car
+    }
     pub fn draw(&self, canvas: &mut sdl2::render::Canvas<sdl2::video::Window>) {
         for road in &self.roads {
             road.draw(canvas);
