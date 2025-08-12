@@ -1,6 +1,6 @@
 use crate::cars::Car;
     
-    
+#[derive(Clone)]    
 pub struct Road {
     pub cars: Vec<Car>,
     safty: f32,
@@ -19,7 +19,6 @@ impl Road {
         }
 
         let last_car_pos : f32 = self.cars[self.cars.len() -1].y;
-        println!("last car y :{}",last_car_pos );
         if last_car_pos >= self.safty {
             self.cars.push(car);
         }
