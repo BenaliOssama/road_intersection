@@ -1,4 +1,5 @@
-use sdl2::{event::Event, keyboard::Keycode, init, rect::Point, pixels::Color};
+use sdl2::{event::Event, keyboard::Keycode,
+init, pixels::Color, rect::Rect, rect::Point};
 
 fn main() {
     let sdl_context = init().unwrap();
@@ -16,6 +17,10 @@ fn main() {
 
     let mut event_pump = sdl_context.event_pump().unwrap();
 
+
+    let mut y_pos = 0; // initial vertical position
+    let mut frame_count = 0;
+
     'running: loop {
 
         // Clear screen with black
@@ -30,6 +35,22 @@ fn main() {
         canvas.draw_line(Point::new(375, 0), Point::new(375, 600)).unwrap();
         canvas.draw_line(Point::new(425, 0), Point::new(425, 600)).unwrap();
 
+        
+        // Set draw color to yellow
+        canvas.set_draw_color(Color::RGB(255, 255, 0));
+
+        // Draw a 50x50 square at fixed x=375, moving y=y_pos
+        let square = Rect::new(375, y_pos, 50, 50);
+        canvas.fill_rect(square).unwrap();
+
+        frame_count += 1 ; 
+        // Update y position: move down by 5 pixels each frame
+        if frame_count % 17 == 0 {
+            y_pos += 1 ; 
+            if y_pos > 600 {
+                    y_pos = 0;
+            }
+        }
 
         // SDL2 uses double buffering for smooth graphics.
         // swaps the hidden buffer with the visible one
