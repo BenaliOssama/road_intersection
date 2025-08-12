@@ -30,7 +30,7 @@ pub mod lines {
 
         pub fn draw(&self, canvas: &mut Canvas<Window>) {
             self.road.draw(canvas);
-            self.traffic_light.draw(canvas);
+            self.traffic_light.draw((325, 250),canvas);
         }
 
         pub fn update(&mut self, dt: f32) {

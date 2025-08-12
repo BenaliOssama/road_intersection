@@ -23,14 +23,13 @@ impl TrafficLight {
         }
     }
     #[allow(dead_code)]
-    pub fn draw(&self, canvas: &mut sdl2::render::Canvas<sdl2::video::Window>) {
-        let color = Color::RGB(255, 255, 0);
+    pub fn draw(&self,pos: (i32, i32), canvas: &mut sdl2::render::Canvas<sdl2::video::Window>) {
 
-        canvas.set_draw_color(color);
+        canvas.set_draw_color(Color::RED);
 
-        let rect = Rect::new(self.pos.0 , self.pos.1, 50, 50);
+        let rect = Rect::new(pos.0 , pos.1, 50, 50);
 
-        canvas.fill_rect(rect).unwrap();
+        canvas.draw_rect(rect).unwrap();
     }
 
     #[allow(dead_code)]
