@@ -4,11 +4,12 @@ use crate::cars::Car;
 pub struct Road {
     pub cars: Vec<Car>,
     safty: f32,
+    size: (i32, i32),
 }
 
 impl Road {
-    pub fn new() -> Self {
-        Road { cars: Vec::new(), safty: 50.0 + 10.0 }
+    pub fn new(size: (i32, i32)) -> Self {
+        Road { cars: Vec::new(), safty: 50.0 + 15.0, size }
     }
 
     pub fn add_car(&mut self, car: Car) {
@@ -33,6 +34,19 @@ impl Road {
     // }
 
     pub fn update(&mut self, dt: f32) {
+        self.cars.retain(|car| {
+            let in_bounds = car.y + car.speed - 50.0 <= self.size.1 as f32;
+            if in_bounds {
+                // update the car only if it's still in bounds
+                // (assuming car.update() mutates car)
+                // Since retain borrows immutably, update separately below
+                true
+            } else {
+                false
+            }
+        });
+
+        // Now update all cars still in the vector
         for car in &mut self.cars {
             car.update(dt);
         }

@@ -21,7 +21,7 @@ fn main() {
     let mut event_pump = sdl_context.event_pump().unwrap();
 
     // Create a road and add some cars
-    let mut road = Road::new();
+    let mut road = Road::new((800, 600));
 
     let mut last_time = Instant::now();
 
