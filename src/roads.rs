@@ -1,4 +1,4 @@
-use crate::cars::{self, Car};
+use crate::cars::{ self, Car };
 use crate::Direction;
 use sdl2::pixels::Color;
 use sdl2::rect::Point;
@@ -76,46 +76,57 @@ impl Road {
     pub fn draw(
         &self,
         direction: Direction,
-        canvas: &mut sdl2::render::Canvas<sdl2::video::Window>,
+        canvas: &mut sdl2::render::Canvas<sdl2::video::Window>
     ) {
+        use sdl2::pixels::Color;
+        use sdl2::rect::Point;
+
         canvas.set_draw_color(Color::RGB(255, 255, 255));
 
-        let common: ((i32, i32), (i32, i32)) =
-            if direction == Direction::North || direction == Direction::South {
-                (
-                   (self.size.0 / 2, 0),
-                    (self.size.0 / 2, self.size.1),
-                )
-            } else {
-                (
-                   (0, self.size.1 / 2),
-                   (self.size.0, self.size.1 / 2),
-                )
-            };
+        // Main center line
+        let common: ((i32, i32), (i32, i32)) = if
+            direction == Direction::North ||
+            direction == Direction::South
+        {
+            ((self.size.0 / 2, 0), (self.size.0 / 2, self.size.1))
+        } else {
+            ((0, self.size.1 / 2), (self.size.0, self.size.1 / 2))
+        };
 
         canvas.draw_line(common.0, common.1).unwrap();
 
+        // Second line to represent the lane width
+        let lane_offset = 50; // half of lane width
         let other = match direction {
             Direction::North => {
-                (Point::new(common.0.0 - 50, common.0.1),Point::new(common.1.0 - 50, common.1.1))
+                (
+                    Point::new(common.0.0 - lane_offset, common.0.1),
+                    Point::new(common.1.0 - lane_offset, common.1.1),
+                )
             }
-            Direction::North => {
-                (Point::new(0, 0), Point::new(0,0))
+            Direction::South => {
+                (
+                    Point::new(common.0.0 + lane_offset, common.0.1),
+                    Point::new(common.1.0 + lane_offset, common.1.1),
+                )
             }
-                        Direction::North => {
-                (Point::new(0, 0), Point::new(0,0))
+            Direction::East => {
+                (
+                    Point::new(common.0.0, common.0.1 - lane_offset),
+                    Point::new(common.1.0, common.1.1 - lane_offset),
+                )
             }
-                        Direction::North => {
-                (Point::new(0, 0), Point::new(0,0))
+            Direction::West => {
+                (
+                    Point::new(common.0.0, common.0.1 + lane_offset),
+                    Point::new(common.1.0, common.1.1 + lane_offset),
+                )
             }
-            _ => panic!("should be a valid point"),
         };
 
-        canvas
-            .draw_line(other.0, other.1)
-            .unwrap();
-        // switch case
+        canvas.draw_line(other.0, other.1).unwrap();
 
+        // Draw all cars on this road
         for car in &self.cars {
             car.draw(canvas);
         }
