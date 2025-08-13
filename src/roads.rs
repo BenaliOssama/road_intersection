@@ -72,7 +72,7 @@ impl Road {
 
         // Now update all cars still in the vector
         for car in &mut self.cars {
-            car.update(dt);
+            car.update(dt /*direction */);
         }
     }
 
