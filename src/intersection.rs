@@ -1,7 +1,10 @@
-use crate::{roads::Road, traffic_lights::TrafficLight};
-use crate::{cars::Car};
-use crate::cars::CarColor;
+use crate::{roads::Road};
+use sdl2::video::Window;
+use sdl2::render::Canvas;
+use std::collections::HashMap;
+use crate::cars::{Car, CarColor};
 
+// Direction enum with conversion to string
 pub enum Direction {
     North,
     South,
@@ -9,12 +12,23 @@ pub enum Direction {
     West,
 }
 
-// Line module
+impl Direction {
+    pub fn to_str(&self) -> &'static str {
+        match self {
+            Direction::North => "T_R",
+            Direction::South => "B_R",
+            Direction::East  => "T_L",
+            Direction::West  => "B_L",
+        }
+    }
+}
+
+// Line module for handling roads and traffic lights
 pub mod lines {
-    use crate::{roads::Road, traffic_lights::TrafficLight};
+    use crate::{roads::Road,traffic_lights::TrafficLight};
     use sdl2::render::Canvas;
     use sdl2::video::Window;
-
+    
     #[derive(Clone)]
     pub struct Line {
         pub road: Road,
@@ -30,7 +44,7 @@ pub mod lines {
 
         pub fn draw(&self, canvas: &mut Canvas<Window>) {
             self.road.draw(canvas);
-            self.traffic_light.draw((325, 250),canvas);
+            self.traffic_light.draw((325, 250), canvas);
         }
 
         pub fn update(&mut self, dt: f32, is_open: bool) {
@@ -46,44 +60,52 @@ pub mod lines {
 
 use lines::Line;
 
-// Intersection struct
+// Intersection struct to manage lines and add cars
 pub struct Intersection {
-    pub lines: Vec<Line>,
     elapsed: f32,
+    lines: HashMap<&'static str, Line>,
 }
 
 impl Intersection {
     pub fn new(size: (i32, i32)) -> Self {
-        let line = Line::new(size);
-        let lines = vec![line.clone(), line.clone(), line.clone(), line];
-        Intersection { lines, elapsed:  0.0 }
+        let mut lines = HashMap::new();
+        // Directly create and insert lines without cloning
+        lines.insert("T_R", Line::new(size));
+        lines.insert("T_L", Line::new(size));
+        lines.insert("B_R", Line::new(size));
+        lines.insert("B_L", Line::new(size));
+
+        Intersection { lines, elapsed: 0.0 }
     }
 
-    pub fn add_car_from_direction(&mut self, _dir: Direction) {
-        // Example: always add to first line
-        if let Some(line) = self.lines.get_mut(0) {
+    // Add car to a specific direction line
+    pub fn add_car_from_direction(&mut self, dir: Direction) {
+        // Convert direction to string to access the corresponding line
+        if let Some(line) = self.lines.get_mut(dir.to_str()) {
             line.add_car(Car::new(CarColor::Yellow, 375, 0.0, 60.0));
         }
     }
-    
+
+    // Add car to a random direction line
     pub fn add_car_from_random_direction(&mut self) {
-        // use rand::seq::SliceRandom;
-        // let mut rng = rand::thread_rng();
-        // if let Some(line) = self.lines.choose(&mut rng) {
+        // let mut rng = rand::rngs::ThreadRng::default();
+        // if let Some((_key, line)) = self.lines[&mut rng] {
         //     line.add_car(Car::new(CarColor::Yellow, 375, 0.0, 60.0));
         // }
     }
 
-    pub fn draw(&self, canvas: &mut sdl2::render::Canvas<sdl2::video::Window>) {
-        for line in &self.lines {
+    // Draw all lines in the intersection
+    pub fn draw(&self, canvas: &mut Canvas<Window>) {
+        for (_, line) in &self.lines {
             line.draw(canvas);
         }
     }
 
+    // Update all lines in the intersection
     pub fn update(&mut self, dt: f32) {
         // calculate then update
         let c = self.clock(dt);
-        for line in &mut self.lines {
+        for (_, line)  in &mut  self.lines {
             line.update(dt, c);
         }
     }
@@ -96,4 +118,3 @@ impl Intersection {
         false
     }
 }
-

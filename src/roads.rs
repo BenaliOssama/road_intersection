@@ -1,4 +1,4 @@
-use crate::cars::Car;
+use crate::cars::{self, Car};
     
 #[derive(Clone)]    
 pub struct Road {
@@ -24,13 +24,13 @@ impl Road {
         }
     }
 
-    // fn remove_car(&mut self, car: Car) {
-    //     if self.last_car.is_none(){
-    //         self.cars.push(car);
-    //     }else if self.last_car.as_ref().unwrap().y >= self.safty {
-    //         self.cars.push(car);
-    //     }
-    // }
+    fn remove_car(&mut self, car: Car) {
+        // if self.last_car.is_none(){
+        //     self.cars.push(car);
+        // }else if self.last_car.as_ref().unwrap().y >= self.safty {
+        //     self.cars.push(car);
+        // }
+    }
 
     pub fn update(&mut self, dt: f32) {
         self.cars.retain(|car| {
