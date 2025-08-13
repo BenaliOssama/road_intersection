@@ -10,9 +10,16 @@ pub struct Road {
     pub stop_lign: (f32, f32),
     direction: Direction,
     pub size: (i32, i32),
+    // zone 1
+    // zone 2
 }
 
 impl Road {
+    pub fn is_car_in_zone() -> Option<Car> {
+        None
+        //  if car.x , y == zone ? .clone()
+    }
+
     pub fn new(size: (i32, i32), direction: Direction) -> Self {
         let (w, h) = size;
         let center = ((w as f32) / 2.0, (h as f32) / 2.0);
