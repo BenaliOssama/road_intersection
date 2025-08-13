@@ -2,6 +2,7 @@
 use crate::{roads::Road, traffic_lights::TrafficLight};
 use sdl2::render::Canvas;
 use sdl2::video::Window;
+use crate::cars::Car;
 
 #[derive(Clone)]
 pub struct Line {
@@ -17,6 +18,7 @@ pub enum Direction {
     East,
     West,
 }
+
 impl Line {
     pub fn new(size: (i32, i32), direction: Direction) -> Self {
         let road = Road::new(size, direction.clone());
@@ -42,5 +44,11 @@ impl Line {
     }
     pub fn add_car(&mut self, car: crate::cars::Car) {
         self.road.add_car(car);
+    }
+    pub fn remove(&mut self, car: Car) {
+        self.road.remove_car(car);
+    }
+    pub fn car_in_zone(&self) -> Option<Car> {
+        return self.road.car_in_zone();
     }
 }

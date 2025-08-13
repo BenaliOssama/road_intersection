@@ -4,6 +4,7 @@ mod roads;
 mod traffic_lights;
 mod lines;
 
+use rand::Rng;
 use crate::intersection::*;
 
 use crate::lines::*;//Line::Direction;
@@ -54,13 +55,13 @@ fn main() {
                     keycode: Some(Keycode::Up),
                     ..
                 } => {
-                    intersection.add_car_from_direction(Direction::North);
+                    intersection.add_car_from_direction(Direction::South);
                 }
                 Event::KeyUp {
                     keycode: Some(Keycode::Down),
                     ..
                 } => {
-                    intersection.add_car_from_direction(Direction::South);
+                    intersection.add_car_from_direction(Direction::North);
                 }
                 Event::KeyUp {
                     keycode: Some(Keycode::Right),
@@ -78,7 +79,15 @@ fn main() {
                     keycode: Some(Keycode::R),
                     ..
                 } => {
-                    intersection.add_car_from_random_direction();
+                     let num = rand::thread_rng().gen_range(0..4);
+                     match num {
+                        0 =>  intersection.add_car_from_direction(Direction::West),
+                        1 =>  intersection.add_car_from_direction(Direction::East), 
+                        2 =>  intersection.add_car_from_direction(Direction::North), 
+                        3 =>  intersection.add_car_from_direction(Direction::South),
+                        _ => (),
+                        
+                     }
                 }
                 _ => {}
             }
