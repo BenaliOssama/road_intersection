@@ -52,29 +52,23 @@ impl Road {
         let (w, h) = self.size;
         let center = ((w as f32) / 2.0, (h as f32) / 2.0);
         // use size and direction
-        let (x, y) = match self.direction {
-            Direction::North => (center.0 as i32 - 50, 50),
-            Direction::South => (center.0 as i32, self.size.1 - 50),
-            Direction::West => (w, center.1 as i32 - 50),
-            Direction::East => (0, center.1 as i32),
-        };
+
         let color = match num {
             0 => CarColor::Blue,
             1 => CarColor::White,
             2 => CarColor::Yellow,
             _ => panic!("never more than what should be: {}", num),
         };
+        let (x, y) = match self.direction {
+            Direction::North => (center.0 as i32 - 50, 50),
+            Direction::South => (center.0 as i32, self.size.1 - 50),
+            Direction::West => (w, center.1 as i32 - 50),
+            Direction::East => (0, center.1 as i32),
+        };
         let car = Car::new(color, x as f32, y as f32, 60.0);
 
         let (w, h) = self.size;
         let center = ((w as f32) / 2.0, (h as f32) / 2.0);
-
-        let (x, y) = match self.direction {
-            Direction::North => (center.0 as i32 - 50, 50),
-            Direction::South => (center.0 as i32, self.size.1 - 50),
-            Direction::East => (w, center.1 as i32 - 50),
-            Direction::West => (0, center.1 as i32),
-        };
 
         let car = Car::new(CarColor::Yellow, x as f32, y as f32, 60.0);
 
