@@ -1,5 +1,7 @@
-use crate::cars::{self, Car, CarColor};
+use crate::cars::Car;
 use crate::Direction;
+
+use crate::cars::CarColor;
 
 #[derive(Clone)]
 pub struct Road {
@@ -33,16 +35,17 @@ impl Road {
     }
 
     pub fn add_new_car(&mut self) {
+        // this need safty check to add a car
         let (w, h) = self.size;
         let center = ((w as f32) / 2.0, (h as f32) / 2.0);
         // use size and direction
         let (x, y) = match self.direction {
-            Direction::North => (center.0 as i32 - 50, 0),
-            Direction::South => (center.0 as i32, h),
-            Direction::East => (w, center.1 as i32),
-            Direction::West => (0, center.1 as i32),
+            Direction::North => (center.0 as i32 - 50, 50),
+            Direction::South => (center.0 as i32, self.size.1 - 50),
+            Direction::East => (w, center.1 as i32 - 50),
+            Direction::West => (0, center.1 as i32 ),
         };
-        let car = Car::new(CarColor::Yellow, x, y as f32, 60.0);
+        let car = Car::new(CarColor::Yellow, x as f32, y as f32, 60.0);
 
         if self.cars.len() == 0 {
             self.cars.push(car);
@@ -93,7 +96,7 @@ impl Road {
 
         // Now update all cars still in the vector
         for car in &mut self.cars {
-            car.update(dt);
+            car.update(dt, self.direction.to_owned());
         }
     }
 
