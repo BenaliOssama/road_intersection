@@ -1,14 +1,7 @@
-<<<<<<< Updated upstream
 use crate::cars::{Car, CarColor};
 use crate::Direction;
 
 use rand::Rng;
-=======
-use crate::cars::Car;
-use crate::Direction;
-
-use crate::cars::CarColor;
->>>>>>> Stashed changes
 
 #[derive(Clone)]
 pub struct Road {
@@ -49,15 +42,12 @@ impl Road {
     }
 
     pub fn add_new_car(&mut self) {
-<<<<<<< Updated upstream
         let vehicle_length = 50.0;
         let safety_gap = 30.0;
         let s_min = vehicle_length + safety_gap;
         let lane_length = 800.0;
         let capacity = (lane_length / s_min) as usize;
         let num = rand::thread_rng().gen_range(0..3);
-=======
->>>>>>> Stashed changes
         // this need safty check to add a car
         let (w, h) = self.size;
         let center = ((w as f32) / 2.0, (h as f32) / 2.0);
@@ -65,7 +55,6 @@ impl Road {
         let (x, y) = match self.direction {
             Direction::North => (center.0 as i32 - 50, 50),
             Direction::South => (center.0 as i32, self.size.1 - 50),
-<<<<<<< Updated upstream
             Direction::West => (w, center.1 as i32 - 50),
             Direction::East => (0, center.1 as i32),
         };
@@ -89,21 +78,18 @@ impl Road {
 
         let car = Car::new(CarColor::Yellow, x as f32, y as f32, 60.0);
 
-        // no cars yet — just spawn
-        if self.cars.is_empty() {
-=======
-            Direction::East => (w, center.1 as i32 - 50),
-            Direction::West => (0, center.1 as i32 ),
-        };
+        // // no cars yet — just spawn
+        // if self.cars.is_empty() {
+        //     Direction::East => (w, center.1 as i32 - 50),
+        //     Direction::West => (0, center.1 as i32 ),
+        // };
         let car = Car::new(CarColor::Yellow, x as f32, y as f32, 60.0);
 
         if self.cars.len() == 0 {
->>>>>>> Stashed changes
             self.cars.push(car);
             return;
         }
 
-<<<<<<< Updated upstream
         let last_car = self.cars.last().unwrap();
 
         let distance_ok = match self.direction {
@@ -114,10 +100,6 @@ impl Road {
         };
 
         if distance_ok && self.cars.len() < capacity {
-=======
-        let last_car_pos: f32 = self.cars[self.cars.len() - 1].y;
-        if last_car_pos >= self.safty {
->>>>>>> Stashed changes
             self.cars.push(car);
         }
     }
