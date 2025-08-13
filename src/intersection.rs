@@ -39,8 +39,9 @@ impl Intersection {
             line.draw(direction.clone(), canvas);
         }
     }
+
     pub fn update(&mut self, dt: f32) {
-        let c = self.clock(dt);
+        let is_green = self.clock(dt);
 
         // First, figure out which cars to move
         let mut moves = Vec::new();
@@ -48,10 +49,10 @@ impl Intersection {
             if let Some(car) = line.car_in_zone() {
                 println!("week week a 3ibad lah rani f zone");
                 let take_line = what_line_to_take(&car.color, direct);
-                moves.push((direct.clone(), take_line, car));
+                moves.push((direct.clone(), take_line, car.clone()));
                 line.remove(car.clone());
             }
-            line.update(dt, c);
+            line.update(dt, is_green);
         }
 
         // Now perform the moves
@@ -71,6 +72,9 @@ impl Intersection {
         false
     }
 }
+
+
+
 
 fn what_line_to_take(car_color: &CarColor, comming_from: &Direction) -> Direction {
     match car_color {

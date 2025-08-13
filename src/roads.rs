@@ -36,19 +36,18 @@ impl Road {
         }
     }
 
-    pub fn car_in_zone(&self) -> Option< Car> {
+    pub fn car_in_zone(&self) -> Option< &Car> {
         let zone_length = 50.0; // distance after stop line considered "turn zone"
         let (stop_x, stop_y) = self.stop_lign;
 
-        // self.cars.iter_mut().find(|car| {
-        //     match self.direction {
-        //         Direction::North => car.y <= stop_y && car.y >= stop_y - zone_length,
-        //         Direction::South => car.y >= stop_y && car.y <= stop_y + zone_length,
-        //         Direction::East  => car.x >= stop_x && car.x <= stop_x + zone_length,
-        //         Direction::West  => car.x <= stop_x && car.x >= stop_x - zone_length,
-        //     }
-        // })
-        None
+        self.cars.iter().find(|car| {
+            match self.direction {
+                Direction::North => car.y <= stop_y && car.y >= stop_y - zone_length,
+                Direction::South => car.y >= stop_y && car.y <= stop_y + zone_length,
+                Direction::East  => car.x >= stop_x && car.x <= stop_x + zone_length,
+                Direction::West  => car.x <= stop_x && car.x >= stop_x - zone_length,
+            }
+        })
     }
 
 
