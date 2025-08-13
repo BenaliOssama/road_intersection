@@ -29,8 +29,8 @@ impl Line {
     }
 
     pub fn draw(&self, direction: Direction, canvas: &mut Canvas<Window>) {
-        self.road.draw(direction , canvas);
-        self.traffic_light.draw((325, 250), canvas);
+        self.road.draw(direction.clone() , canvas);
+        self.traffic_light.draw((800, 600),direction.clone(), canvas);
     }
 
     pub fn update(&mut self, dt: f32, is_open: bool) {
