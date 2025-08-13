@@ -1,5 +1,5 @@
 use crate::cars::{ self, Car };
-use crate::Direction;
+use crate::{roads, Direction};
 use sdl2::pixels::Color;
 use sdl2::rect::Point;
 
@@ -72,7 +72,7 @@ impl Road {
 
         // Now update all cars still in the vector
         for car in &mut self.cars {
-            car.update(dt /*direction */);
+            car.update(dt,self.direction.to_owned());
         }
     }
 
