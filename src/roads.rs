@@ -67,17 +67,8 @@ impl Road {
         };
         let car = Car::new(color, x as f32, y as f32, 60.0);
 
-        let (w, h) = self.size;
-        let center = ((w as f32) / 2.0, (h as f32) / 2.0);
 
-        let car = Car::new(CarColor::Yellow, x as f32, y as f32, 60.0);
 
-        // // no cars yet — just spawn
-        // if self.cars.is_empty() {
-        //     Direction::East => (w, center.1 as i32 - 50),
-        //     Direction::West => (0, center.1 as i32 ),
-        // };
-        let car = Car::new(CarColor::Yellow, x as f32, y as f32, 60.0);
 
         if self.cars.len() == 0 {
             self.cars.push(car);
