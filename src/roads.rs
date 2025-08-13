@@ -2,6 +2,7 @@ use crate::cars::Car;
 use crate::Direction;
 
 use crate::cars::CarColor;
+use rand::Rng;
 
 #[derive(Clone)]
 pub struct Road {
@@ -35,6 +36,7 @@ impl Road {
     }
 
     pub fn add_new_car(&mut self) {
+        let num = rand::thread_rng().gen_range(0..3);
         // this need safty check to add a car
         let (w, h) = self.size;
         let center = ((w as f32) / 2.0, (h as f32) / 2.0);
@@ -42,10 +44,16 @@ impl Road {
         let (x, y) = match self.direction {
             Direction::North => (center.0 as i32 - 50, 50),
             Direction::South => (center.0 as i32, self.size.1 - 50),
-            Direction::East => (w, center.1 as i32 - 50),
-            Direction::West => (0, center.1 as i32 ),
+            Direction::West => (w, center.1 as i32 - 50),
+            Direction::East => (0, center.1 as i32),
         };
-        let car = Car::new(CarColor::Yellow, x as f32, y as f32, 60.0);
+        let color = match num {
+            0=> CarColor::Blue, 
+            1=> CarColor::White,
+            2=> CarColor::Yellow ,
+            _ => panic!("never more than what should be: {}", num),
+        };
+        let car = Car::new(color, x as f32, y as f32, 60.0);
 
         if self.cars.len() == 0 {
             self.cars.push(car);
