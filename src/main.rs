@@ -66,13 +66,13 @@ fn main() {
                     keycode: Some(Keycode::Right),
                     ..
                 } => {
-                    intersection.add_car_from_direction(Direction::East);
+                    intersection.add_car_from_direction(Direction::West);
                 }
                 Event::KeyUp {
                     keycode: Some(Keycode::Left),
                     ..
                 } => {
-                    intersection.add_car_from_direction(Direction::West);
+                    intersection.add_car_from_direction(Direction::East);
                 }
                 Event::KeyUp {
                     keycode: Some(Keycode::R),
