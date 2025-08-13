@@ -36,9 +36,9 @@ impl Road {
         }
     }
 
-    pub fn car_in_zone(&mut self) -> Option<&mut Car> {
-        // let zone_length = 50.0; // distance after stop line considered "turn zone"
-        // let (stop_x, stop_y) = self.stop_lign;
+    pub fn car_in_zone(&self) -> Option< Car> {
+        let zone_length = 50.0; // distance after stop line considered "turn zone"
+        let (stop_x, stop_y) = self.stop_lign;
 
         // self.cars.iter_mut().find(|car| {
         //     match self.direction {
@@ -48,7 +48,7 @@ impl Road {
         //         Direction::West  => car.x <= stop_x && car.x >= stop_x - zone_length,
         //     }
         // })
-        todo!()
+        None
     }
 
 

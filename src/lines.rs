@@ -42,13 +42,13 @@ impl Line {
     pub fn add_new_car(&mut self){
         self.road.add_new_car();
     }
-    pub fn add_car(&mut self, car: crate::cars::Car) {
+    pub fn add_car(&mut self, car:  Car) {
         self.road.add_car(car);
     }
     pub fn remove(&mut self, car: Car) {
         self.road.remove_car(car);
     }
-    pub fn car_in_zone(&mut self) -> Option<&mut Car> {
+    pub fn car_in_zone( &self) -> Option< Car> {
         return self.road.car_in_zone();
     }
 }
