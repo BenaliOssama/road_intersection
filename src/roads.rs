@@ -35,6 +35,7 @@ impl Road {
     }
 
     pub fn add_car(&mut self, car: Car) {
+        // find indes of the first car befor traffic light and insert at that index;
         if self.cars.len() == 0 {
             self.cars.push(car);
             return;
@@ -46,12 +47,14 @@ impl Road {
         }
     }
 
-    fn remove_car(&mut self, car: Car) {
-        // if self.last_car.is_none(){
-        //     self.cars.push(car);
-        // }else if self.last_car.as_ref().unwrap().y >= self.safty {
-        //     self.cars.push(car);
-        // }
+    pub fn is_before_light(car: Car) -> bool {
+        // is the car befor trafic light return true
+        todo!()
+    }
+
+    pub fn remove_car(&mut self, car: Car) {
+        // remove the car from road
+        todo!()
     }
 
     pub fn update(&mut self, dt: f32) {
