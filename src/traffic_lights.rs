@@ -24,8 +24,10 @@ impl TrafficLight {
     }
     #[allow(dead_code)]
     pub fn draw(&self,pos: (i32, i32), canvas: &mut sdl2::render::Canvas<sdl2::video::Window>) {
-
-        canvas.set_draw_color(Color::RED);
+        match self.state {
+            LightState::Red => canvas.set_draw_color(Color::RED),
+            LightState::Green => canvas.set_draw_color(Color::GREEN),
+        }
 
         let rect = Rect::new(pos.0 , pos.1, 50, 50);
 
@@ -41,8 +43,11 @@ impl TrafficLight {
         self.timer = 0.0;
     }
 
-    pub fn update(&mut self, delta_time: f32) {
+    pub fn update(&mut self, delta_time: f32, is_on : bool) {
         self.timer += delta_time;
+        if is_on {
+            self.switch();
+        }
         // Implement logic to switch state based on timer here
     }
 }

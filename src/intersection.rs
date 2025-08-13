@@ -33,8 +33,8 @@ pub mod lines {
             self.traffic_light.draw((325, 250),canvas);
         }
 
-        pub fn update(&mut self, dt: f32) {
-            self.traffic_light.update(dt);
+        pub fn update(&mut self, dt: f32, is_open: bool) {
+            self.traffic_light.update(dt, is_open);
             self.road.update(dt);
         }
 
@@ -49,13 +49,14 @@ use lines::Line;
 // Intersection struct
 pub struct Intersection {
     pub lines: Vec<Line>,
+    elapsed: f32,
 }
 
 impl Intersection {
     pub fn new(size: (i32, i32)) -> Self {
         let line = Line::new(size);
         let lines = vec![line.clone(), line.clone(), line.clone(), line];
-        Intersection { lines }
+        Intersection { lines, elapsed:  0.0 }
     }
 
     pub fn add_car_from_direction(&mut self, _dir: Direction) {
@@ -80,9 +81,19 @@ impl Intersection {
     }
 
     pub fn update(&mut self, dt: f32) {
+        // calculate then update
+        let c = self.clock(dt);
         for line in &mut self.lines {
-            line.update(dt);
+            line.update(dt, c);
         }
+    }
+    fn clock(&mut self, dt: f32) -> bool {
+        self.elapsed += dt;
+        if self.elapsed >= 3.0 {
+            self.elapsed = 0.0;
+            return true;
+        }
+        false
     }
 }
 
