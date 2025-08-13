@@ -7,19 +7,6 @@ use sdl2::video::Window;
 use std::collections::HashMap;
 
 
-// Direction enum with conversion to string
-
-impl Direction {
-    pub fn to_str(&self) -> &'static str {
-        match self {
-            Direction::North => "T_R",
-            Direction::South => "B_R",
-            Direction::East => "T_L",
-            Direction::West => "B_L",
-        }
-    }
-}
-
 
 // Intersection struct to manage lines and add cars
 pub struct Intersection {
