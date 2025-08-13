@@ -1,7 +1,5 @@
-use crate::cars::{ self, Car };
+use crate::cars::{self, Car, CarColor};
 use crate::Direction;
-use sdl2::pixels::Color;
-use sdl2::rect::Point;
 
 #[derive(Clone)]
 pub struct Road {
@@ -31,6 +29,29 @@ impl Road {
             stop_lign,
             direction,
             size,
+        }
+    }
+
+    pub fn add_new_car(&mut self) {
+        let (w, h) = self.size;
+        let center = ((w as f32) / 2.0, (h as f32) / 2.0);
+        // use size and direction
+        let (x, y) = match self.direction {
+            Direction::North => (center.0 as i32 - 50, 0),
+            Direction::South => (center.0 as i32, h),
+            Direction::East => (w, center.1 as i32),
+            Direction::West => (0, center.1 as i32),
+        };
+        let car = Car::new(CarColor::Yellow, x, y as f32, 60.0);
+
+        if self.cars.len() == 0 {
+            self.cars.push(car);
+            return;
+        }
+
+        let last_car_pos: f32 = self.cars[self.cars.len() - 1].y;
+        if last_car_pos >= self.safty {
+            self.cars.push(car);
         }
     }
 
@@ -79,7 +100,7 @@ impl Road {
     pub fn draw(
         &self,
         direction: Direction,
-        canvas: &mut sdl2::render::Canvas<sdl2::video::Window>
+        canvas: &mut sdl2::render::Canvas<sdl2::video::Window>,
     ) {
         use sdl2::pixels::Color;
         use sdl2::rect::Point;
@@ -87,44 +108,34 @@ impl Road {
         canvas.set_draw_color(Color::RGB(255, 255, 255));
 
         // Main center line
-        let common: ((i32, i32), (i32, i32)) = if
-            direction == Direction::North ||
-            direction == Direction::South
-        {
-            ((self.size.0 / 2, 0), (self.size.0 / 2, self.size.1))
-        } else {
-            ((0, self.size.1 / 2), (self.size.0, self.size.1 / 2))
-        };
+        let common: ((i32, i32), (i32, i32)) =
+            if direction == Direction::North || direction == Direction::South {
+                ((self.size.0 / 2, 0), (self.size.0 / 2, self.size.1))
+            } else {
+                ((0, self.size.1 / 2), (self.size.0, self.size.1 / 2))
+            };
 
         canvas.draw_line(common.0, common.1).unwrap();
 
         // Second line to represent the lane width
         let lane_offset = 50; // half of lane width
         let other = match direction {
-            Direction::North => {
-                (
-                    Point::new(common.0.0 - lane_offset, common.0.1),
-                    Point::new(common.1.0 - lane_offset, common.1.1),
-                )
-            }
-            Direction::South => {
-                (
-                    Point::new(common.0.0 + lane_offset, common.0.1),
-                    Point::new(common.1.0 + lane_offset, common.1.1),
-                )
-            }
-            Direction::East => {
-                (
-                    Point::new(common.0.0, common.0.1 - lane_offset),
-                    Point::new(common.1.0, common.1.1 - lane_offset),
-                )
-            }
-            Direction::West => {
-                (
-                    Point::new(common.0.0, common.0.1 + lane_offset),
-                    Point::new(common.1.0, common.1.1 + lane_offset),
-                )
-            }
+            Direction::North => (
+                Point::new(common.0 .0 - lane_offset, common.0 .1),
+                Point::new(common.1 .0 - lane_offset, common.1 .1),
+            ),
+            Direction::South => (
+                Point::new(common.0 .0 + lane_offset, common.0 .1),
+                Point::new(common.1 .0 + lane_offset, common.1 .1),
+            ),
+            Direction::East => (
+                Point::new(common.0 .0, common.0 .1 - lane_offset),
+                Point::new(common.1 .0, common.1 .1 - lane_offset),
+            ),
+            Direction::West => (
+                Point::new(common.0 .0, common.0 .1 + lane_offset),
+                Point::new(common.1 .0, common.1 .1 + lane_offset),
+            ),
         };
 
         canvas.draw_line(other.0, other.1).unwrap();

@@ -37,7 +37,9 @@ impl Line {
         self.traffic_light.update(dt, is_open);
         self.road.update(dt);
     }
-
+    pub fn add_new_car(&mut self){
+        self.road.add_new_car();
+    }
     pub fn add_car(&mut self, car: crate::cars::Car) {
         self.road.add_car(car);
     }
