@@ -15,11 +15,6 @@ pub struct Road {
 }
 
 impl Road {
-    pub fn car_in_zone(&self) -> Option<Car> {
-        None
-        //  if car.x , y == zone ? .clone()
-    }
-
     pub fn new(size: (i32, i32), direction: Direction) -> Self {
         let (w, h) = size;
         let center = ((w as f32) / 2.0, (h as f32) / 2.0);
@@ -40,6 +35,22 @@ impl Road {
             size,
         }
     }
+
+    pub fn car_in_zone(&mut self) -> Option<&mut Car> {
+        // let zone_length = 50.0; // distance after stop line considered "turn zone"
+        // let (stop_x, stop_y) = self.stop_lign;
+
+        // self.cars.iter_mut().find(|car| {
+        //     match self.direction {
+        //         Direction::North => car.y <= stop_y && car.y >= stop_y - zone_length,
+        //         Direction::South => car.y >= stop_y && car.y <= stop_y + zone_length,
+        //         Direction::East  => car.x >= stop_x && car.x <= stop_x + zone_length,
+        //         Direction::West  => car.x <= stop_x && car.x >= stop_x - zone_length,
+        //     }
+        // })
+        todo!()
+    }
+
 
     pub fn add_new_car(&mut self) {
         let vehicle_length = 50.0;
