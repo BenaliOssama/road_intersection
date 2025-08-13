@@ -1,11 +1,15 @@
-mod roads;
 mod cars;
 mod intersection;
+mod roads;
 mod traffic_lights;
+mod lines;
 
-use sdl2::{event::Event, keyboard::Keycode, init, pixels::Color, rect::Point};
-use std::time::Instant;
 use crate::intersection::*;
+
+use crate::lines::*;//Line::Direction;
+
+use sdl2::{event::Event, init, keyboard::Keycode, pixels::Color, rect::Point};
+use std::time::Instant;
 
 fn main() {
     let sdl_context = init().unwrap();
@@ -34,8 +38,12 @@ fn main() {
         canvas.clear();
 
         canvas.set_draw_color(Color::RGB(255, 255, 255));
-        canvas.draw_line(Point::new(375, 0), Point::new(375, 600)).unwrap();
-        canvas.draw_line(Point::new(425, 0), Point::new(425, 600)).unwrap();
+        canvas
+            .draw_line(Point::new(375, 0), Point::new(375, 600))
+            .unwrap();
+        canvas
+            .draw_line(Point::new(425, 0), Point::new(425, 600))
+            .unwrap();
 
         intersection.draw(&mut canvas);
         canvas.present();
@@ -43,21 +51,39 @@ fn main() {
         for event in event_pump.poll_iter() {
             match event {
                 Event::Quit { .. }
-                | Event::KeyDown { keycode: Some(Keycode::Escape), .. } => break 'running,
+                | Event::KeyDown {
+                    keycode: Some(Keycode::Escape),
+                    ..
+                } => break 'running,
 
-                Event::KeyUp { keycode: Some(Keycode::Up), .. } => {
+                Event::KeyUp {
+                    keycode: Some(Keycode::Up),
+                    ..
+                } => {
                     intersection.add_car_from_direction(Direction::South);
                 }
-                Event::KeyUp { keycode: Some(Keycode::Down), .. } => {
+                Event::KeyUp {
+                    keycode: Some(Keycode::Down),
+                    ..
+                } => {
                     intersection.add_car_from_direction(Direction::North);
                 }
-                Event::KeyUp { keycode: Some(Keycode::Right), .. } => {
+                Event::KeyUp {
+                    keycode: Some(Keycode::Right),
+                    ..
+                } => {
                     intersection.add_car_from_direction(Direction::West);
                 }
-                Event::KeyUp { keycode: Some(Keycode::Left), .. } => {
+                Event::KeyUp {
+                    keycode: Some(Keycode::Left),
+                    ..
+                } => {
                     intersection.add_car_from_direction(Direction::East);
                 }
-                Event::KeyUp { keycode: Some(Keycode::R), .. } => {
+                Event::KeyUp {
+                    keycode: Some(Keycode::R),
+                    ..
+                } => {
                     intersection.add_car_from_random_direction();
                 }
                 _ => {}
@@ -65,4 +91,3 @@ fn main() {
         }
     }
 }
-
