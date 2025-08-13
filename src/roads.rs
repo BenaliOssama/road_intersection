@@ -1,5 +1,8 @@
-use crate::{ cars::{ self, Car} };
+use crate::cars::{self, Car};
 use crate::Direction;
+use sdl2::{pixels::Color};
+use sdl2::rect::Point;
+
 #[derive(Clone)]
 pub struct Road {
     pub cars: Vec<Car>,
@@ -70,7 +73,19 @@ impl Road {
         }
     }
 
-    pub fn draw(&self, canvas: &mut sdl2::render::Canvas<sdl2::video::Window>) {
+    pub fn draw(
+        &self,
+        direction: Direction,
+        canvas: &mut sdl2::render::Canvas<sdl2::video::Window>,
+    ) {
+        canvas.set_draw_color(Color::RGB(255, 255, 255));
+        canvas
+            .draw_line(Point::new(375, 0), Point::new(375, 600))
+            .unwrap();
+        canvas
+            .draw_line(Point::new(425, 0), Point::new(425, 600))
+            .unwrap();
+
         for car in &self.cars {
             car.draw(canvas);
         }

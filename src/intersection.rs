@@ -48,7 +48,7 @@ impl Intersection {
     // Draw all lines in the intersection
     pub fn draw(&self, canvas: &mut Canvas<Window>) {
         for (_, line) in &self.lines {
-            line.draw(canvas);
+            line.draw(Direction::North, canvas);
         }
     }
 
