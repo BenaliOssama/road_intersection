@@ -43,13 +43,13 @@ impl Car {
     }
 
     match direction {
-        Direction::North => {
+        Direction::South => {
             self.y -= self.speed * dt; // move up
             if self.y < 0.0 {
                 self.y = 600.0; // wrap around (screen height)
             }
         }
-        Direction::South => {
+        Direction::North => {
             self.y += self.speed * dt; // move down
             if self.y > 600.0 {
                 self.y = 0.0; // wrap around

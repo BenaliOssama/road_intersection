@@ -33,7 +33,7 @@ impl Intersection {
     pub fn add_car_from_direction(&mut self, dir: Direction) {
         // Convert direction to string to access the corresponding line
         if let Some(line) = self.lines.get_mut(&dir) {
-            line.add_car(Car::new(CarColor::Yellow, 375.0, 0.0, 60.0));
+            line.add_new_car();
         }
     }
 
