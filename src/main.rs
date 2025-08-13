@@ -88,7 +88,6 @@ fn main() {
                         _ => (),
                         
                      }
-                    intersection.add_car_from_random_direction();
                 }
                 _ => {}
             }

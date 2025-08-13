@@ -33,37 +33,32 @@ impl Intersection {
         }
     }
 
-    // Add car to a random direction line
-    pub fn add_car_from_random_direction(&mut self) {
-        // let mut rng = rand::rngs::ThreadRng::default();
-        // if let Some((_key, line)) = self.lines[&mut rng] {
-        //     line.add_car(Car::new(CarColor::Yellow, 375, 0.0, 60.0));
-        // }
-    }
-
     // Draw all lines in the intersection
     pub fn draw(&self, canvas: &mut Canvas<Window>) {
         for (direction, line) in &self.lines {
             line.draw(direction.clone(), canvas);
         }
     }
-
-    // Update all lines in the intersection
     pub fn update(&mut self, dt: f32) {
-        // calculate then update
         let c = self.clock(dt);
-        for (direct, line) in &mut self.lines {
-            // intersecting
-            let car = line.car_in_zone();
 
-            // fine out the line i need to take
-            if car.is_some() {
-                let car = car.unwrap();
+        // First, figure out which cars to move
+        let mut moves = Vec::new();
+        for (direct, line) in &mut self.lines {
+            if let Some(car) = line.car_in_zone() {
+                println!("week week a 3ibad lah rani f zone");
                 let take_line = what_line_to_take(&car.color, direct);
-                line.remove(car);
+                moves.push((direct.clone(), take_line, car));
+                line.remove(car.clone());
             }
-            //
             line.update(dt, c);
+        }
+
+        // Now perform the moves
+        for (_, take_line, car) in moves {
+            if let Some(line) = self.lines.get_mut(&take_line) {
+                line.add_car(car);
+            }
         }
     }
 
