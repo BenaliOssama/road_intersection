@@ -60,6 +60,7 @@ impl Intersection {
             line.update(dt, c);
         }
     }
+    
     fn clock(&mut self, dt: f32) -> bool {
         self.elapsed += dt;
         if self.elapsed >= 3.0 {

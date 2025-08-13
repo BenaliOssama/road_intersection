@@ -1,6 +1,6 @@
 use crate::cars::{self, Car};
 use crate::Direction;
-use sdl2::{pixels::Color};
+use sdl2::pixels::Color;
 use sdl2::rect::Point;
 
 #[derive(Clone)]
@@ -79,12 +79,42 @@ impl Road {
         canvas: &mut sdl2::render::Canvas<sdl2::video::Window>,
     ) {
         canvas.set_draw_color(Color::RGB(255, 255, 255));
+
+        let common: ((i32, i32), (i32, i32)) =
+            if direction == Direction::North || direction == Direction::South {
+                (
+                   (self.size.0 / 2, 0),
+                    (self.size.0 / 2, self.size.1),
+                )
+            } else {
+                (
+                   (0, self.size.1 / 2),
+                   (self.size.0, self.size.1 / 2),
+                )
+            };
+
+        canvas.draw_line(common.0, common.1).unwrap();
+
+        let other = match direction {
+            Direction::North => {
+                (Point::new(common.0.0 - 50, common.0.1),Point::new(common.1.0 - 50, common.1.1))
+            }
+            Direction::North => {
+                (Point::new(0, 0), Point::new(0,0))
+            }
+                        Direction::North => {
+                (Point::new(0, 0), Point::new(0,0))
+            }
+                        Direction::North => {
+                (Point::new(0, 0), Point::new(0,0))
+            }
+            _ => panic!("should be a valid point"),
+        };
+
         canvas
-            .draw_line(Point::new(375, 0), Point::new(375, 600))
+            .draw_line(other.0, other.1)
             .unwrap();
-        canvas
-            .draw_line(Point::new(425, 0), Point::new(425, 600))
-            .unwrap();
+        // switch case
 
         for car in &self.cars {
             car.draw(canvas);
