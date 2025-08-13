@@ -1,4 +1,5 @@
 use sdl2::{pixels::Color, rect::Rect};
+use crate::Direction;
 
 #[allow(dead_code)]
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
@@ -23,12 +24,16 @@ impl TrafficLight {
         }
     }
     #[allow(dead_code)]
-    pub fn draw(&self,pos: (i32, i32), canvas: &mut sdl2::render::Canvas<sdl2::video::Window>) {
+    pub fn draw(&self,size: (i32, i32) , direction : Direction, canvas: &mut sdl2::render::Canvas<sdl2::video::Window>) {
+        // calculate the center, 
+
+        // calculate base on direction 
+        // example nort , (x, y) -> center - 100, center - 50 )
         match self.state {
             LightState::Red => canvas.set_draw_color(Color::RED),
             LightState::Green => canvas.set_draw_color(Color::GREEN),
         }
-
+        let 
         let rect = Rect::new(pos.0 , pos.1, 50, 50);
 
         canvas.draw_rect(rect).unwrap();
