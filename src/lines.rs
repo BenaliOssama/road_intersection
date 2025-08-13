@@ -20,7 +20,7 @@
     }
     impl Line {
         pub fn new(size: (i32, i32), direction: Direction) -> Self {
-            let road = Road::new(size);
+            let road = Road::new(size, direction.clone());
             let traffic_light = TrafficLight::new((10, 10));
             Line {
                 road,

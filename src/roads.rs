@@ -1,15 +1,34 @@
-use crate::cars::{self, Car};
-    
-#[derive(Clone)]    
+use crate::{ cars::{ self, Car} };
+use crate::Direction;
+#[derive(Clone)]
 pub struct Road {
     pub cars: Vec<Car>,
-    safty: f32,
-    size: (i32, i32),
+    pub safty: f32,
+    pub stop_lign: (f32, f32),
+    direction: Direction,
+    pub size: (i32, i32),
 }
 
 impl Road {
-    pub fn new(size: (i32, i32)) -> Self {
-        Road { cars: Vec::new(), safty: 50.0 + 15.0, size }
+    pub fn new(size: (i32, i32), direction: Direction) -> Self {
+        let (w, h) = size;
+        let center = ((w as f32) / 2.0, (h as f32) / 2.0);
+        let stop_offset = 50.0; // distance from intersection center
+
+        let stop_lign = match direction {
+            Direction::North => (center.0, center.1 - stop_offset),
+            Direction::South => (center.0, center.1 + stop_offset),
+            Direction::West => (center.0 - stop_offset, center.1),
+            Direction::East => (center.0 + stop_offset, center.1),
+        };
+
+        Road {
+            cars: Vec::new(),
+            safty: 50.0 + 15.0,
+            stop_lign,
+            direction,
+            size,
+        }
     }
 
     pub fn add_car(&mut self, car: Car) {
@@ -18,7 +37,7 @@ impl Road {
             return;
         }
 
-        let last_car_pos : f32 = self.cars[self.cars.len() -1].y;
+        let last_car_pos: f32 = self.cars[self.cars.len() - 1].y;
         if last_car_pos >= self.safty {
             self.cars.push(car);
         }
@@ -34,7 +53,7 @@ impl Road {
 
     pub fn update(&mut self, dt: f32) {
         self.cars.retain(|car| {
-            let in_bounds = car.y + car.speed - 50.0 <= self.size.1 as f32;
+            let in_bounds = car.y + car.speed - 50.0 <= (self.size.1 as f32);
             if in_bounds {
                 // update the car only if it's still in bounds
                 // (assuming car.update() mutates car)
@@ -57,4 +76,3 @@ impl Road {
         }
     }
 }
-
