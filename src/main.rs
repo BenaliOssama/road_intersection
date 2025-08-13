@@ -8,7 +8,7 @@ use crate::intersection::*;
 
 use crate::lines::*;//Line::Direction;
 
-use sdl2::{event::Event, init, keyboard::Keycode, pixels::Color, rect::Point};
+use sdl2::{event::Event, init, keyboard::Keycode, pixels::Color};
 use std::time::Instant;
 
 fn main() {
@@ -37,13 +37,7 @@ fn main() {
         canvas.set_draw_color(Color::RGB(0, 0, 0));
         canvas.clear();
 
-        canvas.set_draw_color(Color::RGB(255, 255, 255));
-        canvas
-            .draw_line(Point::new(375, 0), Point::new(375, 600))
-            .unwrap();
-        canvas
-            .draw_line(Point::new(425, 0), Point::new(425, 600))
-            .unwrap();
+
 
         intersection.draw(&mut canvas);
         canvas.present();

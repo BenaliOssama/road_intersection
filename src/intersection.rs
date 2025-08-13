@@ -47,8 +47,8 @@ impl Intersection {
 
     // Draw all lines in the intersection
     pub fn draw(&self, canvas: &mut Canvas<Window>) {
-        for (_, line) in &self.lines {
-            line.draw(canvas);
+        for (direction, line) in &self.lines {
+            line.draw(direction.clone(), canvas);
         }
     }
 
@@ -60,6 +60,7 @@ impl Intersection {
             line.update(dt, c);
         }
     }
+    
     fn clock(&mut self, dt: f32) -> bool {
         self.elapsed += dt;
         if self.elapsed >= 3.0 {
