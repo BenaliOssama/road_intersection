@@ -1,12 +1,8 @@
-
-
 use crate::cars::{Car, CarColor};
 use crate::lines::*;
 use sdl2::render::Canvas;
 use sdl2::video::Window;
 use std::collections::HashMap;
-
-
 
 // Intersection struct to manage lines and add cars
 pub struct Intersection {
@@ -56,11 +52,21 @@ impl Intersection {
     pub fn update(&mut self, dt: f32) {
         // calculate then update
         let c = self.clock(dt);
-        for (_, line) in &mut self.lines {
+        for (direct, line) in &mut self.lines {
+            // intersecting
+            let car = line.car_in_zone();
+
+            // fine out the line i need to take
+            if car.is_some() {
+                let car = car.unwrap();
+                let take_line = what_line_to_take(&car.color, direct);
+                line.remove(car);
+            }
+            //
             line.update(dt, c);
         }
     }
-    
+
     fn clock(&mut self, dt: f32) -> bool {
         self.elapsed += dt;
         if self.elapsed >= 3.0 {
@@ -68,5 +74,28 @@ impl Intersection {
             return true;
         }
         false
+    }
+}
+
+fn what_line_to_take(car_color: &CarColor, comming_from: &Direction) -> Direction {
+    match car_color {
+        CarColor::Yellow => {
+            return comming_from.clone();
+        }
+        CarColor::White => {
+            // turn right
+            match comming_from {
+                Direction::North => return Direction::East,
+                Direction::East => return Direction::South,
+                Direction::South => return Direction::West,
+                Direction::West => return Direction::North,
+            }
+        }
+        CarColor::Blue => match comming_from {
+            Direction::North => return Direction::West,
+            Direction::East => return Direction::South,
+            Direction::South => return Direction::East,
+            Direction::West => return Direction::North,
+        },
     }
 }

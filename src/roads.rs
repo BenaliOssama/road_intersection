@@ -1,7 +1,6 @@
-use crate::cars::Car;
+use crate::cars::{Car, CarColor};
 use crate::Direction;
 
-use crate::cars::CarColor;
 use rand::Rng;
 
 #[derive(Clone)]
@@ -48,9 +47,9 @@ impl Road {
             Direction::East => (0, center.1 as i32),
         };
         let color = match num {
-            0=> CarColor::Blue, 
-            1=> CarColor::White,
-            2=> CarColor::Yellow ,
+            0 => CarColor::Blue,
+            1 => CarColor::White,
+            2 => CarColor::Yellow,
             _ => panic!("never more than what should be: {}", num),
         };
         let car = Car::new(color, x as f32, y as f32, 60.0);
@@ -86,7 +85,8 @@ impl Road {
 
     pub fn remove_car(&mut self, car: Car) {
         // remove the car from road
-        todo!()
+
+        self.cars.retain(|c| *c != car);
     }
 
     pub fn update(&mut self, dt: f32) {

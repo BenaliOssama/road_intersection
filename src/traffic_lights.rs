@@ -69,5 +69,6 @@ impl TrafficLight {
             self.switch();
         }
         // Implement logic to switch state based on timer here
+
     }
 }
