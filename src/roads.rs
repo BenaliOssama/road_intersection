@@ -91,15 +91,15 @@ impl Road {
                     }
                 }
             }
-            
-            Direction::West=> {
+
+            Direction::West => {
                 if index > 0 {
                     if car.x + self.safty + dt >= self.cars[index - 1].x {
                         return false;
                     }
                 }
             }
-            Direction::East=> {
+            Direction::East => {
                 if index > 0 {
                     if car.x - self.safty - dt <= self.cars[index - 1].x {
                         return false;
@@ -131,7 +131,7 @@ impl Road {
         println!("road {:?} and it's light in {:?}", direction, stop_lign);
         Road {
             cars: Vec::new(),
-            safty: 50.0 + 20.0,
+            safty: 50.0 + 50.0,
             stop_lign,
             direction,
             size,
@@ -214,9 +214,7 @@ impl Road {
                 let car_head = car.y + 50.0;
                 (car_head >= stop && car_head <= stop + zone_length)
             }
-            Direction::East => {
-                (car.x <= stop && car.x >= stop - zone_length)
-            }
+            Direction::East => (car.x <= stop && car.x >= stop - zone_length),
 
             Direction::West => {
                 let stop = stop - 50.0;
@@ -272,17 +270,84 @@ impl Road {
         }
     }
 
-    pub fn add_car(&mut self, car: Car) {
-        // find indes of the first car befor traffic light and insert at that index;
+    pub fn last_car_before_light(&self) -> usize {
         if self.cars.len() == 0 {
-            self.cars.push(car);
-            return;
+            return 0 ;
         }
+        match self.direction {
+            Direction::North => {
+                for (i, car) in self.cars.iter().enumerate() {
+                    if car.y < self.stop_lign {
+                        return i;
+                    }
+                }
+                0
+            }
+            Direction::South => {
+                for (i, car) in self.cars.iter().enumerate() {
+                    if car.y > self.stop_lign {
+                        return i ;
+                    }
+                }
+                0
+            }
+            Direction::West => {
+                for (i, car) in self.cars.iter().enumerate() {
+                    if car.x < self.stop_lign {
+                        return i ;
+                    }
+                }
+                0
+            }
+            Direction::East => {
+                for (i, car) in self.cars.iter().enumerate() {
+                    if car.x > self.stop_lign {
+                        return i;
+                    }
+                }
+                0
+            }
+        }
+    }
 
-        let last_car_pos: f32 = self.cars[self.cars.len() - 1].y;
-        if last_car_pos >= self.safty {
-            self.cars.push(car);
-        }
+    pub fn add_car(&mut self, car: Car) {
+        let index =  if self.last_car_before_light() == 0 {
+            0
+        }else{
+            self.last_car_before_light() - 1
+        };
+
+        // find indes of the first car befor traffic light and insert at that index;
+        //if self.cars.len() == 0 {
+        self.cars.insert(index , car);
+        //   return;
+        //}
+        // match self.direction {
+        //     Direction::North => {
+        //         let last_car_pos: f32 = self.cars[self.cars.len() - 1].y;
+        //         if last_car_pos >= self.safty {
+        //             self.cars.push(car);
+        //         }
+        //     }
+        //     Direction::South=> {
+        //         let last_car_pos: f32 = self.cars[self.cars.len() - 1].y;
+        //         if last_car_pos <= self.safty {
+        //             self.cars.push(car);
+        //         }
+        //     }
+        //     Direction::West => {
+        //         let last_car_pos: f32 = self.cars[self.cars.len() - 1].x;
+        //         if last_car_pos >= self.safty {
+        //             self.cars.push(car);
+        //         }
+        //     }
+        //     Direction::East=> {
+        //         let last_car_pos: f32 = self.cars[self.cars.len() - 1].x;
+        //         if last_car_pos <= self.safty {
+        //             self.cars.push(car);
+        //         }
+        //     }
+        // }
     }
 
     pub fn is_before_light(&self, car: Car) -> bool {

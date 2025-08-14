@@ -67,8 +67,7 @@ impl Intersection {
                 }
             }
             if is_green == *direct {
-                //line.update(dt, true);
-                line.update(dt, false);
+                line.update(dt, true);
             } else {
                 line.update(dt, false);
             }
@@ -93,7 +92,7 @@ impl Intersection {
         //     })
         //     .map(|(direction, _)| direction.clone())
         //     .unwrap_or(Direction::North)
-        Direction::West
+        Direction::North
     }
 }
 
