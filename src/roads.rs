@@ -29,7 +29,7 @@ impl Road {
                 Direction::North => car.y + car.speed - 50.0 <= self.size.1 as f32,
                 Direction::South => car.y + car.speed > 0.0, // - car.speed + 50.0 >= 0.0,
                 Direction::East => car.x + car.speed - 50.0 <= self.size.0 as f32,
-                Direction::West => car.x + car.speed - 50.0 <= self.size.0 as f32,// 0.0, //- car.speed + 50.0 >= 0.0,
+                Direction::West => car.x + car.speed - 50.0 <= self.size.0 as f32, // 0.0, //- car.speed + 50.0 >= 0.0,
             };
             in_bounds
         });
@@ -65,7 +65,7 @@ impl Road {
         // is there a safe distance
         // is the red and in line
         if !self.is_safe_to_move(car, is_green, dt, index) {
-        println!("car can nooooot move");
+            println!("car can nooooot move");
             return false;
         }
         println!("car can mofe");
@@ -208,21 +208,19 @@ impl Road {
 
         match self.direction {
             Direction::North => {
-                let car_head = car.y;
-                let car_teal = car.y;
+                let car_head = car.y + 50.0;
 
-                (car_head <= stop && car_head >= stop - zone_length)
+                car_head < stop && car_head > stop - 2.0
             }
             Direction::South => {
-                let car_head = car.y + 50.0;
-                (car_head >= stop && car_head <= stop + zone_length)
+                let car_head = car.y;
+                car_head > stop && car_head < stop + 2.0
             }
-            Direction::East=> (car.x <= stop && car.x >= stop - zone_length),
+            Direction::East => car.x > stop && car.x < stop + 2.0,
 
-            Direction::West=> {
-                let car_head = car.x + 50.0 ;
-
-                car_head <= stop && car_head >= stop - zone_length
+            Direction::West => {
+            
+                car.x + 50.0 < stop && car.x + 50.0 > stop - 2.0
             }
         }
     }
@@ -276,7 +274,7 @@ impl Road {
 
     pub fn last_car_before_light(&self) -> usize {
         if self.cars.len() == 0 {
-            return 0 ;
+            return 0;
         }
         match self.direction {
             Direction::North => {
@@ -290,15 +288,15 @@ impl Road {
             Direction::South => {
                 for (i, car) in self.cars.iter().enumerate() {
                     if car.y > self.stop_lign {
-                        return i ;
+                        return i;
                     }
                 }
                 0
             }
             Direction::West => {
                 for (i, car) in self.cars.iter().enumerate() {
-                    if car.x  < self.stop_lign {
-                        return i ;
+                    if car.x < self.stop_lign {
+                        return i;
                     }
                 }
                 0
@@ -316,14 +314,13 @@ impl Road {
 
     pub fn add_car(&mut self, car: Car) {
         println!("add car to : {:?}", self.direction);
-        let index =  if self.last_car_before_light() == 0 {
+        let index = if self.last_car_before_light() == 0 {
             0
-        }else{
+        } else {
             self.last_car_before_light() - 1
         };
 
-        self.cars.insert(index , car);
-
+        self.cars.insert(index, car);
     }
 
     pub fn is_before_light(&self, car: Car) -> bool {
@@ -332,8 +329,8 @@ impl Road {
             Direction::North => car.y + 50.0 < self.stop_lign,
             Direction::South => car.y > self.stop_lign,
 
-            Direction::West=> car.x  <  self.stop_lign,
-            Direction::East=> car.x > self.stop_lign,
+            Direction::West => car.x < self.stop_lign,
+            Direction::East => car.x > self.stop_lign,
         }
     }
 
