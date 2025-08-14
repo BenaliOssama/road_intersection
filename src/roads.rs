@@ -149,26 +149,25 @@ impl Road {
             Direction::North => {
                 let car_head = car.y;
 
-                car_head >= stop && car_head <= stop + zone_length
+                car_head >= stop && car_head <= stop + zone_length && car.turned == false
             }
             Direction::South => {
                 let car_head = car.y;
                 let stop = stop - 50.0;
-                car_head <= stop && car_head >= stop - zone_length
+                car_head <= stop && car_head >= stop - zone_length && car.turned == false
             }
 
             Direction::East => {
-                let car_head = car.x;
+                let car_head = car.x + 50.0;
 
-                car_head <= stop && car_head >= stop - zone_length
+                car_head <= stop && car_head >= stop - zone_length && car.turned == false
             }
 
-            _ => false,
-            // Direction::West => {
-            //     let car_head = car.x;
+            Direction::West => {
+                let car_head = car.x;
 
-            //     car_head >= stop && car_head <= stop + zone_length
-            // }
+                car_head >= stop && car_head <= stop + zone_length && car.turned == false
+            }
         })
     }
     pub fn car_in_zone2(&self) -> Option<&Car> {
@@ -189,16 +188,15 @@ impl Road {
 
             Direction::East => {
                 let car_head = car.x;
-                let stop = stop - 50.0;
+                let stop = stop -100.0;
                 car_head <= stop && car_head >= stop - zone_length && car.turned == false
             }
 
             Direction::West => {
                 let car_head = car.x;
-
-                car_head >= stop && car_head <= stop + zone_length && car.turned == false
+                let stop = stop + 100.0;
+                car_head <= stop && car_head >= stop - zone_length && car.turned == false
             }
-            _ => false,
         })
     }
 
