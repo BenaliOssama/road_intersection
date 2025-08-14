@@ -35,9 +35,9 @@ impl Line {
         self.traffic_light.draw((800, 600),direction.clone(), canvas);
     }
 
-    pub fn update(&mut self, dt: f32, is_open: bool) {
-        self.traffic_light.update(dt, is_open);
-        self.road.update(dt);
+    pub fn update(&mut self, dt: f32, is_green: bool) {
+        self.traffic_light.update(dt, is_green);
+        self.road.update(dt, is_green);
     }
     pub fn add_new_car(&mut self){
         self.road.add_new_car();
