@@ -76,10 +76,23 @@ impl Road {
         }
 
         // is there safe distance
-        if index > 0 {
-            if car.y + self.safty + dt >= self.cars[index - 1].y {
-                return false;
+        match self.direction {
+            Direction::North => {
+                if index > 0 {
+                    if car.y + self.safty + dt >= self.cars[index - 1].y {
+                        return false;
+                    }
+                }
             }
+            Direction::South=> {
+                if index > 0 {
+                    if car.y - self.safty - dt <= self.cars[index - 1].y {
+                        return false;
+                    }
+                }
+            }
+            // TODO
+            _ => return false,
         }
         true
     }
