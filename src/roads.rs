@@ -84,15 +84,28 @@ impl Road {
                     }
                 }
             }
-            Direction::South=> {
+            Direction::South => {
                 if index > 0 {
                     if car.y - self.safty - dt <= self.cars[index - 1].y {
                         return false;
                     }
                 }
             }
-            // TODO
-            _ => return false,
+            
+            Direction::West=> {
+                if index > 0 {
+                    if car.x + self.safty + dt >= self.cars[index - 1].x {
+                        return false;
+                    }
+                }
+            }
+            Direction::East=> {
+                if index > 0 {
+                    if car.x - self.safty - dt <= self.cars[index - 1].x {
+                        return false;
+                    }
+                }
+            }
         }
         true
     }
@@ -201,16 +214,14 @@ impl Road {
                 let car_head = car.y + 50.0;
                 (car_head >= stop && car_head <= stop + zone_length)
             }
-            _ => false,
-            // Direction::East => {
-            //     (car.x <= stop && car.x >= stop - zone_length)
-            //         || (car.x <= stop - zone_length && car.x >= stop - 2.0 * zone_length)
-            // }
+            Direction::East => {
+                (car.x <= stop && car.x >= stop - zone_length)
+            }
 
-            // Direction::West => {
-            //     (car.x >= stop && car.x <= stop + zone_length)
-            //         || (car.x >= stop + zone_length && car.x <= stop + 2.0 * zone_length)
-            //}
+            Direction::West => {
+                let stop = stop - 50.0;
+                (car.x >= stop && car.x <= stop + zone_length)
+            }
         }
     }
 }
@@ -237,8 +248,8 @@ impl Road {
         let (x, y) = match self.direction {
             Direction::North => (center.0 as i32 - 50, 50),
             Direction::South => (center.0 as i32, self.size.1 - 50),
-            Direction::East => (w, center.1 as i32 - 50),
-            Direction::West => (0, center.1 as i32),
+            Direction::East => (w - 50, center.1 as i32 - 50),
+            Direction::West => (1, center.1 as i32),
         };
         let car = Car::new(color, x as f32, y as f32, 60.0);
 

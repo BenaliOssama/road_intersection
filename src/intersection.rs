@@ -67,7 +67,8 @@ impl Intersection {
                 }
             }
             if is_green == *direct {
-                line.update(dt, true);
+                //line.update(dt, true);
+                line.update(dt, false);
             } else {
                 line.update(dt, false);
             }
