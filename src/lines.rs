@@ -36,8 +36,8 @@ impl Line {
     }
 
     pub fn update(&mut self, dt: f32, is_green: bool) {
-        self.traffic_light.update(dt, is_green);
         self.road.update(dt, is_green);
+        self.traffic_light.update(dt, is_green);
     }
     pub fn add_new_car(&mut self){
         self.road.add_new_car();

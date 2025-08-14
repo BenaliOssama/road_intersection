@@ -15,6 +15,66 @@ pub struct Road {
 }
 
 impl Road {
+    pub fn update(&mut self, dt: f32, is_green: bool) {
+        // remove cars that out of the visible road
+        self.cars.retain(|car| {
+            let in_bounds = car.y + car.speed - 50.0 <= (self.size.1 as f32);
+            in_bounds
+        });
+
+        let dir = self.direction.clone();
+
+        // Precompute the before_light flags to avoid borrowing `self` during mutable iteration
+        let before_light_flags: Vec<bool> = self
+            .cars
+            .iter()
+            .map(|car| self.is_before_light(car.clone()))
+            .collect();
+        println!(
+            "is car befor light {:?} is it green ? {}",
+            before_light_flags, is_green
+        );
+        let moves: Vec<bool> = self
+            .cars
+            .iter()
+            .map(|car| self.car_can_move(car.clone(), is_green, dt))
+            .collect();
+
+        for ((car, before_light), can_move) in
+            self.cars.iter_mut().zip(before_light_flags).zip(moves)
+        {
+            if can_move {
+                car.start();
+                car.update(dt, dir.clone());
+            } else {
+                car.stop();
+            }
+        }
+    }
+    //
+    pub fn car_can_move(&self, car: Car, is_green: bool, dt: f32) -> bool {
+        // is there a safe distance
+        // is the red and in line
+        if !self.is_safe_to_move(car, is_green, dt) {
+            return false;
+        }
+        true
+    }
+
+    pub fn is_safe_to_move(&self, car: Car, is_green: bool, dt: f32) -> bool {
+        if self.car_in_line(car, dt) && !is_green {
+            return false;
+        }
+        // is there safe distance
+        true
+    }
+    // is the car in stop line
+    pub fn car_in_line(&self, car: Car, dt: f32) -> bool {
+        return self.car_in_zone3(car);
+    }
+}
+
+impl Road {
     pub fn new(size: (i32, i32), direction: Direction) -> Self {
         let (w, h) = size;
         let center = ((w as f32) / 2.0, (h as f32) / 2.0);
@@ -48,24 +108,52 @@ impl Road {
 
                 (car_head >= stop && car_head <= stop + zone_length)
             }
+            _ => false, // Direction::South => {
+                        //     (car.y >= stop && car.y <= stop + zone_length)
+                        //         || (car.y >= stop + zone_length && car.y <= stop + 2.0 * zone_length)
+                        // }
 
-            Direction::South => {
-                (car.y >= stop && car.y <= stop + zone_length)
-                    || (car.y >= stop + zone_length && car.y <= stop + 2.0 * zone_length)
-            }
+                        // Direction::East => {
+                        //     (car.x <= stop && car.x >= stop - zone_length)
+                        //         || (car.x <= stop - zone_length && car.x >= stop - 2.0 * zone_length)
+                        // }
 
-            Direction::East => {
-                (car.x <= stop && car.x >= stop - zone_length)
-                    || (car.x <= stop - zone_length && car.x >= stop - 2.0 * zone_length)
-            }
-
-            Direction::West => {
-                (car.x >= stop && car.x <= stop + zone_length)
-                    || (car.x >= stop + zone_length && car.x <= stop + 2.0 * zone_length)
-            }
+                        // Direction::West => {
+                        //     (car.x >= stop && car.x <= stop + zone_length)
+                        //         || (car.x >= stop + zone_length && car.x <= stop + 2.0 * zone_length)
+                        //}
         })
     }
+    pub fn car_in_zone3(&self, car: Car) -> bool {
+        let zone_length = 50.0;
+        let stop = self.stop_lign;
 
+        match self.direction {
+            Direction::North => {
+                let car_head = car.y;
+                let car_teal = car.y;
+
+                (car_head <= stop && car_head >= stop - zone_length)
+            }
+            _ => false, // Direction::South => {
+                        //     (car.y >= stop && car.y <= stop + zone_length)
+                        //         || (car.y >= stop + zone_length && car.y <= stop + 2.0 * zone_length)
+                        // }
+
+                        // Direction::East => {
+                        //     (car.x <= stop && car.x >= stop - zone_length)
+                        //         || (car.x <= stop - zone_length && car.x >= stop - 2.0 * zone_length)
+                        // }
+
+                        // Direction::West => {
+                        //     (car.x >= stop && car.x <= stop + zone_length)
+                        //         || (car.x >= stop + zone_length && car.x <= stop + 2.0 * zone_length)
+                        //}
+        }
+    }
+}
+
+impl Road {
     pub fn car_in_zone2(&self) -> Option<&Car> {
         let zone_length = 50.0;
         let stop = self.stop_lign;
@@ -156,7 +244,7 @@ impl Road {
     pub fn is_before_light(&self, car: Car) -> bool {
         // is the car befor trafic light return true
         match self.direction {
-            Direction::North =>  car.y  < self.stop_lign,
+            Direction::North => car.y + 50.0 < self.stop_lign,
             _ => false,
         }
     }
@@ -165,29 +253,6 @@ impl Road {
         // remove the car from road
 
         self.cars.retain(|c| *c != car);
-    }
-
-    pub fn update(&mut self, dt: f32, is_green: bool) {
-        self.cars.retain(|car| {
-            let in_bounds = car.y + car.speed - 50.0 <= (self.size.1 as f32);
-            in_bounds
-        });
-
-        let dir = self.direction.clone();
-
-        // Precompute the before_light flags to avoid borrowing `self` during mutable iteration
-        let before_light_flags: Vec<bool> = self
-            .cars
-            .iter()
-            .map(|car| self.is_before_light(car.clone()))
-            .collect();
-
-        for (car, before_light) in self.cars.iter_mut().zip(before_light_flags) {
-            if before_light && !is_green {
-                continue;
-            }
-            car.update(dt, dir.clone());
-        }
     }
 
     pub fn draw(

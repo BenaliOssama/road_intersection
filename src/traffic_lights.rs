@@ -1,5 +1,5 @@
-use sdl2::{ pixels::Color, rect::Rect };
 use crate::Direction;
+use sdl2::{pixels::Color, rect::Rect};
 
 #[allow(dead_code)]
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
@@ -28,7 +28,7 @@ impl TrafficLight {
         &self,
         size: (i32, i32),
         direction: Direction,
-        canvas: &mut sdl2::render::Canvas<sdl2::video::Window>
+        canvas: &mut sdl2::render::Canvas<sdl2::video::Window>,
     ) {
         let (w, h) = size;
         let center = (w / 2, h / 2);
@@ -36,10 +36,10 @@ impl TrafficLight {
 
         // Determine light position based on direction
         let pos = match direction {
-            Direction::North => (center.0 - 100, center.1 - 100),// above intersection
-            Direction::South => (center.0 + 50, center.1 + 50), // below intersection
-            Direction::West => (center.0 + 50, center.1 - 100), // left of intersection
-            Direction::East => (center.0 - 100, center.1 + 50), // right of intersection
+            Direction::North => (center.0 - 100, center.1 - 100), // above intersection
+            Direction::South => (center.0 + 50, center.1 + 50),   // below intersection
+            Direction::West => (center.0 + 50, center.1 - 100),   // left of intersection
+            Direction::East => (center.0 - 100, center.1 + 50),   // right of intersection
             _ => (0, 0),
         };
 
@@ -54,20 +54,16 @@ impl TrafficLight {
     }
 
     #[allow(dead_code)]
-    pub fn switch(&mut self) {
-        self.state = match self.state {
-            LightState::Red => LightState::Green,
-            LightState::Green => LightState::Red,
-        };
-        self.timer = 0.0;
+    pub fn switch(&mut self, is_green:bool) {
+        if is_green {
+            self.state = LightState::Green;
+        }else{
+            self.state = LightState::Red
+        }
     }
 
     pub fn update(&mut self, delta_time: f32, is_green: bool) {
-        self.timer += delta_time;
-        if is_green {
-            self.switch();
-        }
+        self.switch(is_green);
         // Implement logic to switch state based on timer here
-
     }
 }

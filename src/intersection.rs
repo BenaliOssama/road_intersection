@@ -1,9 +1,8 @@
-use crate::cars::{Car, CarColor};
+use crate::cars::CarColor;
 use crate::lines::*;
 use sdl2::render::Canvas;
 use sdl2::video::Window;
 use std::collections::HashMap;
-use std::mem::take;
 
 // Intersection struct to manage lines and add cars
 pub struct Intersection {
@@ -51,17 +50,11 @@ impl Intersection {
         let mut moves = Vec::new();
         for (direct, line) in &mut self.lines {
             if let Some(car) = line.car_in_zone1() {
-                if car.color != CarColor::Yellow {
-                    if car.color == CarColor::White
-                        && (*direct == Direction::North || *direct == Direction::West)
-                        || car.color == CarColor::Blue
-                            && (*direct == Direction::South || *direct == Direction::East)
-                    {
-                        let take_line = what_line_to_take(&car.color, direct);
-                        println!("take line: {:?}", take_line);
-                        moves.push((take_line, car.clone()));
-                        line.remove(car.clone());
-                    }
+                if car.color == CarColor::White {
+                    let take_line = what_line_to_take(&car.color, direct);
+                    println!("take line: {:?}", take_line);
+                    moves.push((take_line, car.clone()));
+                    line.remove(car.clone());
                 }
             }
             line.update(dt, is_green);
@@ -76,11 +69,6 @@ impl Intersection {
     }
 
     fn clock(&mut self, dt: f32) -> bool {
-        self.elapsed += dt;
-        if self.elapsed >= 3.0 {
-            self.elapsed = 0.0;
-            return true;
-        }
         false
     }
 }
