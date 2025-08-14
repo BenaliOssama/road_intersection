@@ -40,7 +40,7 @@ impl TrafficLight {
             Direction::South => (center.0 + 50, center.1 + 50),   // below intersection
             Direction::West => (center.0 + 50, center.1 - 100),   // left of intersection
             Direction::East => (center.0 - 100, center.1 + 50),   // right of intersection
-            _ => (0, 0),
+
         };
 
         // Set color based on light state

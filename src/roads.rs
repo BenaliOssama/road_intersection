@@ -178,9 +178,9 @@ impl Road {
         match self.direction {
             Direction::North => {
                 let car_head = car.y;
-                let car_teal = car.y;
+                // let car_teal = car.y;
 
-                (car_head <= stop && car_head >= stop - zone_length)
+                car_head <= stop && car_head >= stop - zone_length
             }
             _ => false, // Direction::South => {
                         //     (car.y >= stop && car.y <= stop + zone_length)
@@ -207,7 +207,7 @@ impl Road {
         let s_min = vehicle_length + safety_gap;
         let lane_length = 800.0;
         let capacity = (lane_length / s_min) as usize;
-        let num = rand::thread_rng().gen_range(0..3);
+        let num = rand::rng().random_range(0..3);
         // this need safty check to add a car
         let (w, h) = self.size;
         let center = ((w as f32) / 2.0, (h as f32) / 2.0);
