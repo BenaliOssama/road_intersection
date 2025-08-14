@@ -114,9 +114,9 @@ fn what_line_to_take(car_color: &CarColor, comming_from: &Direction) -> Directio
         // turn left
         CarColor::Blue => match comming_from {
             Direction::North => return Direction::West,
-            Direction::West=> return Direction::South,
-            Direction::South=> return Direction::East,
-            Direction::East=> return Direction::North,
+            Direction::West => return Direction::South,
+            Direction::South => return Direction::East,
+            Direction::East => return Direction::North,
         },
     }
 }

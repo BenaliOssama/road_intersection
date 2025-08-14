@@ -29,7 +29,7 @@ impl Road {
                 Direction::North => car.y + car.speed - 50.0 <= self.size.1 as f32,
                 Direction::South => car.y + car.speed > 0.0, // - car.speed + 50.0 >= 0.0,
                 Direction::East => car.x + car.speed - 50.0 <= self.size.0 as f32,
-                Direction::West => car.x > 0.0, //- car.speed + 50.0 >= 0.0,
+                Direction::West => car.x + car.speed - 50.0 <= self.size.0 as f32,// 0.0, //- car.speed + 50.0 >= 0.0,
             };
             in_bounds
         });
@@ -65,13 +65,16 @@ impl Road {
         // is there a safe distance
         // is the red and in line
         if !self.is_safe_to_move(car, is_green, dt, index) {
+        println!("car can nooooot move");
             return false;
         }
+        println!("car can mofe");
         true
     }
 
     pub fn is_safe_to_move(&self, car: Car, is_green: bool, dt: f32, index: usize) -> bool {
         if self.car_in_line(car, dt) && !is_green {
+            print!("because car is in line");
             return false;
         }
 
@@ -214,11 +217,12 @@ impl Road {
                 let car_head = car.y + 50.0;
                 (car_head >= stop && car_head <= stop + zone_length)
             }
-            Direction::East => (car.x <= stop && car.x >= stop - zone_length),
+            Direction::East=> (car.x <= stop && car.x >= stop - zone_length),
 
-            Direction::West => {
-                let stop = stop - 50.0;
-                (car.x >= stop && car.x <= stop + zone_length)
+            Direction::West=> {
+                let car_head = car.x + 50.0 ;
+
+                car_head <= stop && car_head >= stop - zone_length
             }
         }
     }
@@ -293,7 +297,7 @@ impl Road {
             }
             Direction::West => {
                 for (i, car) in self.cars.iter().enumerate() {
-                    if car.x < self.stop_lign {
+                    if car.x  < self.stop_lign {
                         return i ;
                     }
                 }
@@ -311,43 +315,15 @@ impl Road {
     }
 
     pub fn add_car(&mut self, car: Car) {
+        println!("add car to : {:?}", self.direction);
         let index =  if self.last_car_before_light() == 0 {
             0
         }else{
             self.last_car_before_light() - 1
         };
 
-        // find indes of the first car befor traffic light and insert at that index;
-        //if self.cars.len() == 0 {
         self.cars.insert(index , car);
-        //   return;
-        //}
-        // match self.direction {
-        //     Direction::North => {
-        //         let last_car_pos: f32 = self.cars[self.cars.len() - 1].y;
-        //         if last_car_pos >= self.safty {
-        //             self.cars.push(car);
-        //         }
-        //     }
-        //     Direction::South=> {
-        //         let last_car_pos: f32 = self.cars[self.cars.len() - 1].y;
-        //         if last_car_pos <= self.safty {
-        //             self.cars.push(car);
-        //         }
-        //     }
-        //     Direction::West => {
-        //         let last_car_pos: f32 = self.cars[self.cars.len() - 1].x;
-        //         if last_car_pos >= self.safty {
-        //             self.cars.push(car);
-        //         }
-        //     }
-        //     Direction::East=> {
-        //         let last_car_pos: f32 = self.cars[self.cars.len() - 1].x;
-        //         if last_car_pos <= self.safty {
-        //             self.cars.push(car);
-        //         }
-        //     }
-        // }
+
     }
 
     pub fn is_before_light(&self, car: Car) -> bool {
@@ -355,7 +331,9 @@ impl Road {
         match self.direction {
             Direction::North => car.y + 50.0 < self.stop_lign,
             Direction::South => car.y > self.stop_lign,
-            _ => false,
+
+            Direction::West=> car.x  <  self.stop_lign,
+            Direction::East=> car.x > self.stop_lign,
         }
     }
 
