@@ -16,10 +16,14 @@ pub struct Road {
 
 impl Road {
     pub fn firt_car_wait_time(&self) -> u64 {
-        return self.first_car_befor_line().wait_time();
+        self.first_car_befor_line()
+            .map_or(0, |car| car.wait_time())
     }
-    pub fn first_car_befor_line(&self) -> Car {
-        todo!()
+    pub fn first_car_befor_line(&self) -> Option<Car> {
+        self.cars
+            .iter()
+            .find(|car: &&Car| self.is_before_light((**car).clone()))
+            .cloned()
     }
     pub fn update(&mut self, dt: f32, is_green: bool) {
         // remove cars that out of the visible road
