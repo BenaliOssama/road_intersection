@@ -21,7 +21,7 @@ pub enum Direction {
 impl Line {
     pub fn new(size: (i32, i32), direction: Direction) -> Self {
         let road = Road::new(size, direction.clone());
-        let traffic_light = TrafficLight::new((10, 10));
+        let traffic_light = TrafficLight::new(direction.clone());
         Line {
             road,
             traffic_light,
@@ -32,7 +32,7 @@ impl Line {
     pub fn draw(&self, direction: Direction, canvas: &mut Canvas<Window>) {
         self.road.draw(direction.clone(), canvas);
         self.traffic_light
-            .draw((800, 600), direction.clone(), canvas);
+            .draw((800, 600),  canvas);
     }
 
     pub fn update(&mut self, dt: f32, is_green: bool) {

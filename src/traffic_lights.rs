@@ -12,22 +12,21 @@ pub enum LightState {
 pub struct TrafficLight {
     pub state: LightState,
     pub timer: f32, // simple timer in ticks or ms
-    pos: (i32, i32),
+    pub direction : Direction,
 }
 
 impl TrafficLight {
-    pub fn new(pos: (i32, i32)) -> Self {
+    pub fn new(direction: Direction) -> Self {
         TrafficLight {
             state: LightState::Red,
             timer: 0.0,
-            pos: pos,
+            direction,
         }
     }
     #[allow(dead_code)]
     pub fn draw(
         &self,
         size: (i32, i32),
-        direction: Direction,
         canvas: &mut sdl2::render::Canvas<sdl2::video::Window>,
     ) {
         let (w, h) = size;
@@ -35,11 +34,11 @@ impl TrafficLight {
         // let offset = 60; // distance from center / stop line
 
         // Determine light position based on direction
-        let pos = match direction {
+        let pos = match self.direction {
             Direction::North => (center.0 - 100, center.1 - 100), // above intersection
             Direction::South => (center.0 + 50, center.1 + 50),   // below intersection
-            Direction::West => (center.0 + 50, center.1 - 100),   // left of intersection
-            Direction::East => (center.0 - 100, center.1 + 50),   // right of intersection
+            Direction::East=> (center.0 + 50, center.1 - 100),   // left of intersection
+            Direction::West=> (center.0 - 100, center.1 + 50),   // right of intersection
             _ => (0, 0),
         };
 

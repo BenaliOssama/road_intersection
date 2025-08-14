@@ -92,7 +92,7 @@ impl Intersection {
         //     })
         //     .map(|(direction, _)| direction.clone())
         //     .unwrap_or(Direction::North)
-        Direction::East
+        Direction::West
     }
 }
 
