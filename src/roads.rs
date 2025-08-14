@@ -116,12 +116,13 @@ impl Road {
 
                 car_head >= stop && car_head <= stop + zone_length
             }
-            _=> false,
-            // Direction::South => {
-            //     let car_head = car.y;
-            //     car_head <= stop && car_head >= stop - zone_length
-            // }
-
+            Direction::South => {
+                let car_head = car.y;
+                let stop = stop - 50.0 ;
+                car_head <= stop && car_head >= stop - zone_length
+            }
+                
+                _=> false,
             // Direction::East => {
             //     let car_head = car.x;
 
@@ -145,12 +146,13 @@ impl Road {
                 let stop = stop + 50.0;
                 car_head >= stop && car_head <= stop + zone_length
             }
-            _ => false,
-            // Direction::South => {
-            //     let car_head = car.y;
-            //     car_head <= stop && car_head >= stop - zone_length
-            // }
-
+            Direction::South => {
+                let car_head = car.y;
+                let stop = stop - 50.0 * 2.0;
+                car_head <= stop && car_head >= stop - zone_length
+            }
+                
+                _ => false,
             // Direction::East => {
             //     let car_head = car.x;
 

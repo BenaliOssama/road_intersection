@@ -50,12 +50,12 @@ impl Intersection {
         let mut moves = Vec::new();
         for (direct, line) in &mut self.lines {
             if let Some(car) = line.car_in_zone1() {
-                // if car.color == CarColor::White {
-                //     let take_line = what_line_to_take(&car.color, direct);
-                //     println!("take line: {:?}", take_line);
-                //     moves.push((take_line, car.clone()));
-                //     line.remove(car.clone());
-                // }
+                if car.color == CarColor::White {
+                    let take_line = what_line_to_take(&car.color, direct);
+                    println!("take line: {:?}", take_line);
+                    moves.push((take_line, car.clone()));
+                    line.remove(car.clone());
+                }
             }
             if let Some(car) = line.car_in_zone2() {
                 // todo!()
@@ -92,7 +92,7 @@ impl Intersection {
         //     })
         //     .map(|(direction, _)| direction.clone())
         //     .unwrap_or(Direction::North)
-        Direction::North
+        Direction::South
     }
 }
 
