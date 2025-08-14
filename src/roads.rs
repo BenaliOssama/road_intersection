@@ -15,6 +15,12 @@ pub struct Road {
 }
 
 impl Road {
+    pub fn firt_car_wait_time(&self) -> u64{
+        return self.first_car_befor_line().wait_time(); 
+    }
+    pub fn first_car_befor_line(&self) -> Car {
+        todo!()
+    }
     pub fn update(&mut self, dt: f32, is_green: bool) {
         // remove cars that out of the visible road
         self.cars.retain(|car| {
@@ -52,7 +58,7 @@ impl Road {
     pub fn car_can_move(&self, car: Car, is_green: bool, dt: f32, index: usize) -> bool {
         // is there a safe distance
         // is the red and in line
-        if !self.is_safe_to_move(car, is_green, dt, index ) {
+        if !self.is_safe_to_move(car, is_green, dt, index) {
             return false;
         }
         true
@@ -65,7 +71,7 @@ impl Road {
 
         // is there safe distance
         if index > 0 {
-            if car.y + self.safty  + dt >= self.cars[index - 1].y {
+            if car.y + self.safty + dt >= self.cars[index - 1].y {
                 return false;
             }
         }
@@ -127,6 +133,35 @@ impl Road {
                         //}
         })
     }
+    pub fn car_in_zone2(&self) -> Option<&Car> {
+        let zone_length = 50.0;
+        let stop = self.stop_lign;
+
+        self.cars.iter().find(|car| match self.direction {
+            Direction::North => {
+                let car_head = car.y;
+                let car_teal = car.y;
+
+                (car_head >= stop + zone_length && car_head <= stop + 2.0 * zone_length)
+            }
+
+            Direction::South => {
+                (car.y >= stop && car.y <= stop + zone_length)
+                    || (car.y >= stop + zone_length && car.y <= stop + 2.0 * zone_length)
+            }
+
+            Direction::East => {
+                (car.x <= stop && car.x >= stop - zone_length)
+                    || (car.x <= stop - zone_length && car.x >= stop - 2.0 * zone_length)
+            }
+
+            Direction::West => {
+                (car.x >= stop && car.x <= stop + zone_length)
+                    || (car.x >= stop + zone_length && car.x <= stop + 2.0 * zone_length)
+            }
+        })
+    }
+
     pub fn car_in_zone3(&self, car: Car) -> bool {
         let zone_length = 50.0;
         let stop = self.stop_lign;
@@ -157,35 +192,6 @@ impl Road {
 }
 
 impl Road {
-    pub fn car_in_zone2(&self) -> Option<&Car> {
-        let zone_length = 50.0;
-        let stop = self.stop_lign;
-
-        self.cars.iter().find(|car| match self.direction {
-            Direction::North => {
-                let car_head = car.y;
-                let car_teal = car.y;
-
-                (car_head >= stop + zone_length && car_head <= stop + 2.0 * zone_length)
-            }
-
-            Direction::South => {
-                (car.y >= stop && car.y <= stop + zone_length)
-                    || (car.y >= stop + zone_length && car.y <= stop + 2.0 * zone_length)
-            }
-
-            Direction::East => {
-                (car.x <= stop && car.x >= stop - zone_length)
-                    || (car.x <= stop - zone_length && car.x >= stop - 2.0 * zone_length)
-            }
-
-            Direction::West => {
-                (car.x >= stop && car.x <= stop + zone_length)
-                    || (car.x >= stop + zone_length && car.x <= stop + 2.0 * zone_length)
-            }
-        })
-    }
-
     pub fn add_new_car(&mut self) {
         let vehicle_length = 50.0;
         let safety_gap = 30.0;

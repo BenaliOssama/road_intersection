@@ -57,7 +57,19 @@ impl Intersection {
                     line.remove(car.clone());
                 }
             }
-            line.update(dt, is_green);
+            if let Some(car) = line.car_in_zone2() {
+                if car.color == CarColor::Blue {
+                    let take_line = what_line_to_take(&car.color, direct);
+                    println!("take line: {:?}", take_line);
+                    moves.push((take_line, car.clone()));
+                    line.remove(car.clone());
+                }
+            }
+            if is_green == *direct {
+                line.update(dt, true);
+            } else {
+                line.update(dt, false);
+            }
         }
 
         // Now perform the moves
@@ -68,10 +80,17 @@ impl Intersection {
         }
     }
 
-    fn clock(&mut self, dt: f32) -> bool {
-        true
-        // find out the most eargent
-        // ask every line see the most eargent to start light for it 
+    fn clock(&self, dt: f32) -> Direction {
+        self.lines
+            .iter()
+            .max_by_key(|(direction, line)| {
+                // Replace with urgency calculation
+                let waiting_time = line.first_car_wait_time();
+                let car_count = line.road.cars.len();
+                (waiting_time as u64, car_count as u64)
+            })
+            .map(|(direction, _)| direction.clone())
+            .unwrap_or(Direction::North)
     }
 }
 

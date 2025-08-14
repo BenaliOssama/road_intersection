@@ -20,6 +20,9 @@ pub struct Car {
 }
 
 impl Car {
+    pub fn wait_time(&self) -> u64{
+        todo!()
+    }
     pub fn new(color: CarColor, x: f32, y: f32, speed: f32) -> Self {
         Car {
             color,

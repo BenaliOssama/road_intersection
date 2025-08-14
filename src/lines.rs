@@ -1,8 +1,7 @@
-
+use crate::cars::Car;
 use crate::{roads::Road, traffic_lights::TrafficLight};
 use sdl2::render::Canvas;
 use sdl2::video::Window;
-use crate::cars::Car;
 
 #[derive(Clone)]
 pub struct Line {
@@ -31,15 +30,16 @@ impl Line {
     }
 
     pub fn draw(&self, direction: Direction, canvas: &mut Canvas<Window>) {
-        self.road.draw(direction.clone() , canvas);
-        self.traffic_light.draw((800, 600),direction.clone(), canvas);
+        self.road.draw(direction.clone(), canvas);
+        self.traffic_light
+            .draw((800, 600), direction.clone(), canvas);
     }
 
     pub fn update(&mut self, dt: f32, is_green: bool) {
         self.road.update(dt, is_green);
         self.traffic_light.update(dt, is_green);
     }
-    pub fn add_new_car(&mut self){
+    pub fn add_new_car(&mut self) {
         self.road.add_new_car();
     }
     pub fn add_car(&mut self, car: Car) {
@@ -48,7 +48,13 @@ impl Line {
     pub fn remove(&mut self, car: Car) {
         self.road.remove_car(car);
     }
-    pub fn car_in_zone1( &self) -> Option<&Car> {
+    pub fn car_in_zone1(&self) -> Option<&Car> {
         return self.road.car_in_zone1();
+    }
+    pub fn car_in_zone2(&self) -> Option<&Car> {
+        return self.road.car_in_zone1();
+    }
+    pub fn first_car_wait_time(&self) -> u64 {
+        self.road.firt_car_wait_time()
     }
 }
