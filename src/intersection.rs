@@ -45,7 +45,7 @@ impl Intersection {
 impl Intersection {
     pub fn update(&mut self, dt: f32) {
         let is_green = self.clock(dt);
-
+        println!("is green: {:?}", is_green);
         // First, figure out which cars to move
         let mut moves = Vec::new();
         for (direct, line) in &mut self.lines {
@@ -53,7 +53,11 @@ impl Intersection {
                 if car.color == CarColor::White {
                     let take_line = what_line_to_take(&car.color, direct);
                     println!("take line: {:?}", take_line);
-                    moves.push((take_line, car.clone()));
+                    moves.push((take_line, {
+                        let mut  c =car.clone();
+                        c.color = CarColor::Yellow;
+                        c
+                    }));
                     line.remove(car.clone());
                 }
             }
@@ -62,13 +66,17 @@ impl Intersection {
                 if car.color == CarColor::Blue {
                     let take_line = what_line_to_take(&car.color, direct);
                     println!("take line: {:?}", take_line);
-                    moves.push((take_line, car.clone()));
+                    moves.push((take_line, {
+                        let mut  c =car.clone();
+                        c.color = CarColor::Yellow;
+                        c
+                    }));
                     line.remove(car.clone());
                 }
             }
             if is_green == *direct {
-                //line.update(dt, true);
-                line.update(dt, false);
+                line.update(dt, true);
+                // line.update(dt, false);
             } else {
                 line.update(dt, false);
             }
@@ -85,18 +93,21 @@ impl Intersection {
     fn clock(&self, dt: f32) -> Direction {
         self.lines
             .iter()
-            .max_by(|(direction, line), (direction1, line1)| {
+            .max_by(|(_, line), (_, line1)| {
                 // Replace with urgency calculation
                 let waiting_time = line.first_car_wait_time();
+                // println!("waiting time: {:?}", waiting_time);
                 let car_count = line.road.cars.len();
                 if (waiting_time as u64 + car_count as u64 * 10) > (line1.first_car_wait_time() as u64 + line1.road.cars.len() as u64 * 10) {
                     return std::cmp::Ordering::Greater;
-                } else {
+                } else if  (waiting_time as u64 + car_count as u64 * 10) < (line1.first_car_wait_time() as u64 + line1.road.cars.len() as u64 * 10){
                     return std::cmp::Ordering::Less;
+                } else {
+                    return std::cmp::Ordering::Equal;
                 }
             })
             .map(|(direction, _)| direction.clone())
-            .unwrap_or(Direction::North)
+            .expect("how the fuck did this happen?")
         // Direction::West
     }
 }
@@ -107,16 +118,13 @@ fn what_line_to_take(car_color: &CarColor, comming_from: &Direction) -> Directio
         CarColor::Yellow => {
             return comming_from.clone();
         }
-        CarColor::White => {
-            // turn right
-            match comming_from {
-                Direction::North => return Direction::East,
-                Direction::East => return Direction::South,
-                Direction::South => return Direction::West,
-                Direction::West => return Direction::North,
-            }
+        CarColor::White => match comming_from {
+            // turn left
+            Direction::North => return Direction::East,
+            Direction::East => return Direction::South,
+            Direction::South => return Direction::West,
+            Direction::West => return Direction::North,
         }
-        // turn left
         CarColor::Blue => match comming_from {
             Direction::North => return Direction::West,
             Direction::West=> return Direction::South,

@@ -56,12 +56,13 @@ impl Road {
         for ((car, before_light), can_move) in
             self.cars.iter_mut().zip(before_light_flags).zip(moves)
         {
-            if can_move {
+
+            if can_move || !before_light {
                 car.start();
-                car.update(dt, dir.clone());
             } else {
                 car.stop();
             }
+            car.update(dt, dir.clone());
         }
     }
     //
@@ -164,12 +165,12 @@ impl Road {
                 car_head <= stop && car_head >= stop - zone_length
             }
 
-            _ => false,
-            // Direction::West => {
-            //     let car_head = car.x;
-
-            //     car_head >= stop && car_head <= stop + zone_length
-            // }
+            Direction::West => {
+                let car_head = car.x;
+                
+                car_head >= stop && car_head <= stop + zone_length
+            }
+            // _ => false,
         })
     }
     pub fn car_in_zone2(&self) -> Option<&Car> {
@@ -193,13 +194,12 @@ impl Road {
                 let stop = stop - 50.0;
                 car_head <= stop && car_head >= stop - zone_length
             }
+            Direction::West => {
+                let car_head = car.x;
 
-            _ => false,
-            // Direction::West => {
-            //     let car_head = car.x;
-
-            //     car_head >= stop && car_head <= stop + zone_length
-            // }
+                car_head >= stop && car_head <= stop + zone_length
+            }
+            // _ => false,
         })
     }
 
