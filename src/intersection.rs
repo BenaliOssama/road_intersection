@@ -50,14 +50,15 @@ impl Intersection {
         let mut moves = Vec::new();
         for (direct, line) in &mut self.lines {
             if let Some(car) = line.car_in_zone1() {
-                if car.color == CarColor::White {
-                    let take_line = what_line_to_take(&car.color, direct);
-                    println!("take line: {:?}", take_line);
-                    moves.push((take_line, car.clone()));
-                    line.remove(car.clone());
-                }
+                // if car.color == CarColor::White {
+                //     let take_line = what_line_to_take(&car.color, direct);
+                //     println!("take line: {:?}", take_line);
+                //     moves.push((take_line, car.clone()));
+                //     line.remove(car.clone());
+                // }
             }
             if let Some(car) = line.car_in_zone2() {
+                // todo!()
                 if car.color == CarColor::Blue {
                     let take_line = what_line_to_take(&car.color, direct);
                     println!("take line: {:?}", take_line);
@@ -81,16 +82,17 @@ impl Intersection {
     }
 
     fn clock(&self, dt: f32) -> Direction {
-        self.lines
-            .iter()
-            .max_by_key(|(direction, line)| {
-                // Replace with urgency calculation
-                let waiting_time = line.first_car_wait_time();
-                let car_count = line.road.cars.len();
-                (waiting_time as u64, car_count as u64)
-            })
-            .map(|(direction, _)| direction.clone())
-            .unwrap_or(Direction::North)
+        // self.lines
+        //     .iter()
+        //     .max_by_key(|(direction, line)| {
+        //         // Replace with urgency calculation
+        //         let waiting_time = line.first_car_wait_time();
+        //         let car_count = line.road.cars.len();
+        //         (waiting_time as u64, car_count as u64)
+        //     })
+        //     .map(|(direction, _)| direction.clone())
+        //     .unwrap_or(Direction::North)
+        Direction::North
     }
 }
 
@@ -111,10 +113,10 @@ fn what_line_to_take(car_color: &CarColor, comming_from: &Direction) -> Directio
         }
         // turn left
         CarColor::Blue => match comming_from {
-            Direction::North => return Direction::East,
-            Direction::East => return Direction::North,
-            Direction::South => return Direction::West,
-            Direction::West => return Direction::South,
+            Direction::North => return Direction::West,
+            Direction::West=> return Direction::South,
+            Direction::South=> return Direction::East,
+            Direction::East=> return Direction::North,
         },
     }
 }

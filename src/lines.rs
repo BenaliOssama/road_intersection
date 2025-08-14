@@ -52,7 +52,7 @@ impl Line {
         return self.road.car_in_zone1();
     }
     pub fn car_in_zone2(&self) -> Option<&Car> {
-        return self.road.car_in_zone1();
+        return self.road.car_in_zone2();
     }
     pub fn first_car_wait_time(&self) -> u64 {
         self.road.firt_car_wait_time()

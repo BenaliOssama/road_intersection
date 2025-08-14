@@ -15,8 +15,8 @@ pub struct Road {
 }
 
 impl Road {
-    pub fn firt_car_wait_time(&self) -> u64{
-        return self.first_car_befor_line().wait_time(); 
+    pub fn firt_car_wait_time(&self) -> u64 {
+        return self.first_car_befor_line().wait_time();
     }
     pub fn first_car_befor_line(&self) -> Car {
         todo!()
@@ -113,24 +113,26 @@ impl Road {
         self.cars.iter().find(|car| match self.direction {
             Direction::North => {
                 let car_head = car.y;
-                let car_teal = car.y;
 
-                (car_head >= stop && car_head <= stop + zone_length)
+                car_head >= stop && car_head <= stop + zone_length
             }
-            _ => false, // Direction::South => {
-                        //     (car.y >= stop && car.y <= stop + zone_length)
-                        //         || (car.y >= stop + zone_length && car.y <= stop + 2.0 * zone_length)
-                        // }
+            _=> false,
+            // Direction::South => {
+            //     let car_head = car.y;
+            //     car_head <= stop && car_head >= stop - zone_length
+            // }
 
-                        // Direction::East => {
-                        //     (car.x <= stop && car.x >= stop - zone_length)
-                        //         || (car.x <= stop - zone_length && car.x >= stop - 2.0 * zone_length)
-                        // }
+            // Direction::East => {
+            //     let car_head = car.x;
 
-                        // Direction::West => {
-                        //     (car.x >= stop && car.x <= stop + zone_length)
-                        //         || (car.x >= stop + zone_length && car.x <= stop + 2.0 * zone_length)
-                        //}
+            //     car_head >= stop && car_head <= stop - zone_length
+            // }
+
+            // Direction::West => {
+            //     let car_head = car.x;
+
+            //     car_head >= stop && car_head <= stop + zone_length
+            // }
         })
     }
     pub fn car_in_zone2(&self) -> Option<&Car> {
@@ -140,25 +142,26 @@ impl Road {
         self.cars.iter().find(|car| match self.direction {
             Direction::North => {
                 let car_head = car.y;
-                let car_teal = car.y;
-
-                (car_head >= stop + zone_length && car_head <= stop + 2.0 * zone_length)
+                let stop = stop + 50.0;
+                car_head >= stop && car_head <= stop + zone_length
             }
+            _ => false,
+            // Direction::South => {
+            //     let car_head = car.y;
+            //     car_head <= stop && car_head >= stop - zone_length
+            // }
 
-            Direction::South => {
-                (car.y >= stop && car.y <= stop + zone_length)
-                    || (car.y >= stop + zone_length && car.y <= stop + 2.0 * zone_length)
-            }
+            // Direction::East => {
+            //     let car_head = car.x;
 
-            Direction::East => {
-                (car.x <= stop && car.x >= stop - zone_length)
-                    || (car.x <= stop - zone_length && car.x >= stop - 2.0 * zone_length)
-            }
+            //     car_head >= stop && car_head <= stop - zone_length
+            // }
 
-            Direction::West => {
-                (car.x >= stop && car.x <= stop + zone_length)
-                    || (car.x >= stop + zone_length && car.x <= stop + 2.0 * zone_length)
-            }
+            // Direction::West => {
+            //     let car_head = car.x;
+
+            //     car_head >= stop && car_head <= stop + zone_length
+            // }
         })
     }
 
