@@ -24,7 +24,13 @@ impl Road {
     pub fn update(&mut self, dt: f32, is_green: bool) {
         // remove cars that out of the visible road
         self.cars.retain(|car| {
-            let in_bounds = car.y + car.speed - 50.0 <= (self.size.1 as f32);
+            let in_bounds = match self.direction {
+                //car.y + car.speed - 50.0 <= (self.size.1 as f32)
+                Direction::North => car.y + car.speed - 50.0 <= self.size.1 as f32,
+                Direction::South => car.y + car.speed > 0.0, // - car.speed + 50.0 >= 0.0,
+                Direction::East => car.x + car.speed - 50.0 <= self.size.0 as f32,
+                Direction::West => car.x > 0.0, //- car.speed + 50.0 >= 0.0,
+            };
             in_bounds
         });
 
@@ -118,17 +124,17 @@ impl Road {
             }
             Direction::South => {
                 let car_head = car.y;
-                let stop = stop - 50.0 ;
+                let stop = stop - 50.0;
                 car_head <= stop && car_head >= stop - zone_length
             }
-                
+
             Direction::East => {
-                    let car_head = car.x;
-                
-                    car_head <= stop && car_head >= stop - zone_length
-                }
-                
-                _=> false,
+                let car_head = car.x;
+
+                car_head <= stop && car_head >= stop - zone_length
+            }
+
+            _ => false,
             // Direction::West => {
             //     let car_head = car.x;
 
@@ -151,13 +157,13 @@ impl Road {
                 let stop = stop - 50.0 * 2.0;
                 car_head <= stop && car_head >= stop - zone_length
             }
-                
+
             Direction::East => {
                 let car_head = car.x;
-                let stop = stop - 50.0 ; 
+                let stop = stop - 50.0;
                 car_head <= stop && car_head >= stop - zone_length
             }
-            
+
             _ => false,
             // Direction::West => {
             //     let car_head = car.x;
@@ -178,20 +184,20 @@ impl Road {
 
                 (car_head <= stop && car_head >= stop - zone_length)
             }
-            _ => false, // Direction::South => {
-                        //     (car.y >= stop && car.y <= stop + zone_length)
-                        //         || (car.y >= stop + zone_length && car.y <= stop + 2.0 * zone_length)
-                        // }
+            Direction::South => {
+                let car_head = car.y + 50.0;
+                (car_head >= stop && car_head <= stop + zone_length)
+            }
+            _ => false,
+            // Direction::East => {
+            //     (car.x <= stop && car.x >= stop - zone_length)
+            //         || (car.x <= stop - zone_length && car.x >= stop - 2.0 * zone_length)
+            // }
 
-                        // Direction::East => {
-                        //     (car.x <= stop && car.x >= stop - zone_length)
-                        //         || (car.x <= stop - zone_length && car.x >= stop - 2.0 * zone_length)
-                        // }
-
-                        // Direction::West => {
-                        //     (car.x >= stop && car.x <= stop + zone_length)
-                        //         || (car.x >= stop + zone_length && car.x <= stop + 2.0 * zone_length)
-                        //}
+            // Direction::West => {
+            //     (car.x >= stop && car.x <= stop + zone_length)
+            //         || (car.x >= stop + zone_length && car.x <= stop + 2.0 * zone_length)
+            //}
         }
     }
 }
@@ -218,8 +224,8 @@ impl Road {
         let (x, y) = match self.direction {
             Direction::North => (center.0 as i32 - 50, 50),
             Direction::South => (center.0 as i32, self.size.1 - 50),
-            Direction::East=> (w, center.1 as i32 - 50),
-            Direction::West=> (0, center.1 as i32),
+            Direction::East => (w, center.1 as i32 - 50),
+            Direction::West => (0, center.1 as i32),
         };
         let car = Car::new(color, x as f32, y as f32, 60.0);
 
@@ -259,6 +265,7 @@ impl Road {
         // is the car befor trafic light return true
         match self.direction {
             Direction::North => car.y + 50.0 < self.stop_lign,
+            Direction::South => car.y > self.stop_lign,
             _ => false,
         }
     }
