@@ -45,7 +45,7 @@ impl Intersection {
 impl Intersection {
     pub fn update(&mut self, dt: f32) {
         let is_green = self.clock(dt);
-
+        
         // First, figure out which cars to move
         let mut moves = Vec::new();
         for (direct, line) in &mut self.lines {
@@ -83,17 +83,23 @@ impl Intersection {
     }
 
     fn clock(&self, dt: f32) -> Direction {
-        // self.lines
-        //     .iter()
-        //     .max_by_key(|(direction, line)| {
-        //         // Replace with urgency calculation
-        //         let waiting_time = line.first_car_wait_time();
-        //         let car_count = line.road.cars.len();
-        //         (waiting_time as u64, car_count as u64)
-        //     })
-        //     .map(|(direction, _)| direction.clone())
-        //     .unwrap_or(Direction::North)
-        Direction::South
+        self.lines
+            .iter()
+            .max_by(|(_, line), (_, line1)| {
+                // Replace with urgency calculation
+                let waiting_time = line.first_car_wait_time();
+                // println!("waiting time: {:?}", waiting_time);
+                let car_count = line.road.cars.len();
+                if (waiting_time as u64 + car_count as u64 * 10) > (line1.first_car_wait_time() as u64 + line1.road.cars.len() as u64 * 10) {
+                    return std::cmp::Ordering::Greater;
+                } else if  (waiting_time as u64 + car_count as u64 * 10) < (line1.first_car_wait_time() as u64 + line1.road.cars.len() as u64 * 10){
+                    return std::cmp::Ordering::Less;
+                } else {
+                    return std::cmp::Ordering::Equal;
+                }
+            })
+            .map(|(direction, _)| direction.clone())
+            .expect("how the fuck did this happen?")
     }
 }
 
@@ -103,16 +109,12 @@ fn what_line_to_take(car_color: &CarColor, comming_from: &Direction) -> Directio
         CarColor::Yellow => {
             return comming_from.clone();
         }
-        CarColor::White => {
-            // turn right
-            match comming_from {
-                Direction::North => return Direction::East,
-                Direction::East => return Direction::South,
-                Direction::South => return Direction::West,
-                Direction::West => return Direction::North,
-            }
+        CarColor::White => match comming_from {
+            Direction::North => return Direction::East,
+            Direction::East => return Direction::South,
+            Direction::South => return Direction::West,
+            Direction::West => return Direction::North,
         }
-        // turn left
         CarColor::Blue => match comming_from {
             Direction::North => return Direction::West,
             Direction::West => return Direction::South,

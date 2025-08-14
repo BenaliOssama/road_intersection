@@ -2,6 +2,14 @@ use sdl2::{pixels::Color, rect::Rect};
 
 use crate::lines::Direction;
 
+use std::sync::atomic::{AtomicU32, Ordering};
+
+pub static GLOBAL_ID_COUNTER: AtomicU32 = AtomicU32::new(1);
+
+pub fn get_next_id() -> u32 {
+    GLOBAL_ID_COUNTER.fetch_add(1, Ordering::Relaxed)
+}
+
 #[allow(dead_code)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum CarColor {
@@ -10,29 +18,34 @@ pub enum CarColor {
     White,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy)]
 pub struct Car {
+    pub id : u32, 
     pub color: CarColor,
     pub x: f32,
     pub y: f32,     // f32 for smooth movement
     pub speed: f32, // f32 for dt multiplication
     pub moving: bool,
-    wait_time : u64,
+    wait_time : f64,
     pub turned: bool,
 }
 
 impl Car {
+    pub fn PartialEq(&self, other: &Self) -> bool {
+        self.id == other.id
+    }
     pub fn wait_time(&self) -> u64{
-        todo!()
+        self.wait_time as u64
     }
     pub fn new(color: CarColor, x: f32, y: f32, speed: f32) -> Self {
         Car {
+            id: get_next_id(),
             color,
             x,
             y,
             speed,
             moving: true,
-            wait_time: 0,
+            wait_time: 0.0,
             turned: false,
         }
     }
@@ -50,7 +63,7 @@ impl Car {
 
     pub fn update(&mut self, dt: f32, direction: Direction) {
         if !self.moving {
-            self.wait_time += dt as u64;
+            self.wait_time += dt as f64;
             return;
         }
 
@@ -90,5 +103,13 @@ impl Car {
     #[allow(dead_code)]
     pub fn start(&mut self) {
         self.moving = true;
+    }
+}
+
+
+
+impl PartialEq for Car {
+    fn eq(&self, other: &Self) -> bool {
+        self.id == other.id
     }
 }

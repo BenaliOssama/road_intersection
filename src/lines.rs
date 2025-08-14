@@ -10,7 +10,7 @@ pub struct Line {
     pub direction: Direction,
 }
 
-#[derive(Debug, Eq, Hash, PartialEq, Clone)]
+#[derive(Debug, Eq, Hash, PartialEq, Clone, Copy)]
 pub enum Direction {
     North,
     South,
@@ -55,6 +55,11 @@ impl Line {
         return self.road.car_in_zone2();
     }
     pub fn first_car_wait_time(&self) -> u64 {
-        todo!()
+        self.road
+            .cars
+            .iter()
+            .map(|car| {car.wait_time()})
+            .max()
+            .unwrap_or(0)
     }
 }

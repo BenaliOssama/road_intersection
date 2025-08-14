@@ -16,10 +16,14 @@ pub struct Road {
 
 impl Road {
     pub fn firt_car_wait_time(&self) -> u64 {
-        return self.first_car_befor_line().wait_time();
+        self.first_car_befor_line()
+            .map_or(0, |car| car.wait_time())
     }
-    pub fn first_car_befor_line(&self) -> Car {
-        todo!()
+    pub fn first_car_befor_line(&self) -> Option<Car> {
+        self.cars
+            .iter()
+            .find(|car: &&Car| self.is_before_light((**car).clone()))
+            .cloned()
     }
     pub fn update(&mut self, dt: f32, is_green: bool) {
         // remove cars that out of the visible road
@@ -54,10 +58,10 @@ impl Road {
         {
             if can_move || !before_light {
                 car.start();
-                car.update(dt, dir.clone());
             } else {
                 car.stop();
             }
+            car.update(dt, dir);
         }
     }
     //
@@ -231,7 +235,7 @@ impl Road {
         let s_min = vehicle_length + safety_gap;
         let lane_length = 800.0;
         let capacity = (lane_length / s_min) as usize;
-        let num = rand::thread_rng().gen_range(0..3);
+        let num = rand::rng().random_range(0..3);
         // this need safty check to add a car
         let (w, h) = self.size;
         let center = ((w as f32) / 2.0, (h as f32) / 2.0);
