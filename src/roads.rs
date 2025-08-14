@@ -75,7 +75,7 @@ impl Road {
                 let car_head = car.y;
                 let car_teal = car.y;
 
-                    (car_head >= stop + zone_length && car_head <= stop + 2.0 * zone_length)
+                (car_head >= stop + zone_length && car_head <= stop + 2.0 * zone_length)
             }
 
             Direction::South => {
@@ -153,9 +153,12 @@ impl Road {
         }
     }
 
-    pub fn is_before_light(car: Car) -> bool {
+    pub fn is_before_light(&self, car: Car) -> bool {
         // is the car befor trafic light return true
-        todo!()
+        match self.direction {
+            Direction::North =>  car.y  < self.stop_lign,
+            _ => false,
+        }
     }
 
     pub fn remove_car(&mut self, car: Car) {
@@ -164,22 +167,26 @@ impl Road {
         self.cars.retain(|c| *c != car);
     }
 
-    pub fn update(&mut self, dt: f32) {
+    pub fn update(&mut self, dt: f32, is_green: bool) {
         self.cars.retain(|car| {
             let in_bounds = car.y + car.speed - 50.0 <= (self.size.1 as f32);
-            if in_bounds {
-                // update the car only if it's still in bounds
-                // (assuming car.update() mutates car)
-                // Since retain borrows immutably, update separately below
-                true
-            } else {
-                false
-            }
+            in_bounds
         });
 
-        // Now update all cars still in the vector
-        for car in &mut self.cars {
-            car.update(dt, self.direction.to_owned());
+        let dir = self.direction.clone();
+
+        // Precompute the before_light flags to avoid borrowing `self` during mutable iteration
+        let before_light_flags: Vec<bool> = self
+            .cars
+            .iter()
+            .map(|car| self.is_before_light(car.clone()))
+            .collect();
+
+        for (car, before_light) in self.cars.iter_mut().zip(before_light_flags) {
+            if before_light && !is_green {
+                continue;
+            }
+            car.update(dt, dir.clone());
         }
     }
 

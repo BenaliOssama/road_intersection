@@ -62,9 +62,9 @@ impl TrafficLight {
         self.timer = 0.0;
     }
 
-    pub fn update(&mut self, delta_time: f32, is_on: bool) {
+    pub fn update(&mut self, delta_time: f32, is_green: bool) {
         self.timer += delta_time;
-        if is_on {
+        if is_green {
             self.switch();
         }
         // Implement logic to switch state based on timer here
