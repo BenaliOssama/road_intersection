@@ -48,7 +48,7 @@ impl Line {
     pub fn remove(&mut self, car: Car) {
         self.road.remove_car(car);
     }
-    pub fn car_in_zone( &self) -> Option<&Car> {
-        return self.road.car_in_zone();
+    pub fn car_in_zone1( &self) -> Option<&Car> {
+        return self.road.car_in_zone1();
     }
 }

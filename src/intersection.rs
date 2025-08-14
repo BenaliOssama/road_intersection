@@ -3,6 +3,7 @@ use crate::lines::*;
 use sdl2::render::Canvas;
 use sdl2::video::Window;
 use std::collections::HashMap;
+use std::mem::take;
 
 // Intersection struct to manage lines and add cars
 pub struct Intersection {
@@ -16,8 +17,8 @@ impl Intersection {
         // Directly create and insert lines without cloning
         lines.insert(Direction::North, Line::new(size, Direction::North));
         lines.insert(Direction::South, Line::new(size, Direction::South));
-        lines.insert(Direction::West, Line::new(size, Direction::West));
-        lines.insert(Direction::East, Line::new(size, Direction::East));
+        lines.insert(Direction::East, Line::new(size, Direction::West));
+        lines.insert(Direction::West, Line::new(size, Direction::East));
 
         Intersection {
             lines,
@@ -42,7 +43,6 @@ impl Intersection {
     }
 }
 
-
 impl Intersection {
     pub fn update(&mut self, dt: f32) {
         let is_green = self.clock(dt);
@@ -50,18 +50,25 @@ impl Intersection {
         // First, figure out which cars to move
         let mut moves = Vec::new();
         for (direct, line) in &mut self.lines {
-            if let Some(car) = line.car_in_zone() {
-                println!("week week a 3ibad lah rani f zone");
-                let take_line = what_line_to_take(&car.color, direct);
-                println!("take line: {:?}", take_line);
-                moves.push((direct.clone(), take_line, car.clone()));
-                line.remove(car.clone());
+            if let Some(car) = line.car_in_zone1() {
+                if car.color != CarColor::Yellow {
+                    if car.color == CarColor::White
+                        && (*direct == Direction::North || *direct == Direction::West)
+                        || car.color == CarColor::Blue
+                            && (*direct == Direction::South || *direct == Direction::East)
+                    {
+                        let take_line = what_line_to_take(&car.color, direct);
+                        println!("take line: {:?}", take_line);
+                        moves.push((take_line, car.clone()));
+                        line.remove(car.clone());
+                    }
+                }
             }
             line.update(dt, is_green);
         }
 
         // Now perform the moves
-        for (_, take_line, car) in moves {
+        for (take_line, car) in moves {
             if let Some(line) = self.lines.get_mut(&take_line) {
                 line.add_car(car);
             }
@@ -93,10 +100,11 @@ fn what_line_to_take(car_color: &CarColor, comming_from: &Direction) -> Directio
                 Direction::West => return Direction::North,
             }
         }
+        // turn left
         CarColor::Blue => match comming_from {
-            Direction::North => return Direction::West,
+            Direction::North => return Direction::East,
             Direction::East => return Direction::North,
-            Direction::South => return Direction::East,
+            Direction::South => return Direction::West,
             Direction::West => return Direction::South,
         },
     }
