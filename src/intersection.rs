@@ -27,6 +27,7 @@ impl Intersection {
 
     // Add car to a specific direction line
     pub fn add_car_from_direction(&mut self, dir: Direction) {
+        println!("car comming from {:?}", dir);
         // Convert direction to string to access the corresponding line
         if let Some(line) = self.lines.get_mut(&dir) {
             line.add_new_car();
@@ -39,7 +40,10 @@ impl Intersection {
             line.draw(direction.clone(), canvas);
         }
     }
+}
 
+
+impl Intersection {
     pub fn update(&mut self, dt: f32) {
         let is_green = self.clock(dt);
 
@@ -49,6 +53,7 @@ impl Intersection {
             if let Some(car) = line.car_in_zone() {
                 println!("week week a 3ibad lah rani f zone");
                 let take_line = what_line_to_take(&car.color, direct);
+                println!("take line: {:?}", take_line);
                 moves.push((direct.clone(), take_line, car.clone()));
                 line.remove(car.clone());
             }
@@ -73,10 +78,8 @@ impl Intersection {
     }
 }
 
-
-
-
 fn what_line_to_take(car_color: &CarColor, comming_from: &Direction) -> Direction {
+    println!("car comming from : {:?}", comming_from);
     match car_color {
         CarColor::Yellow => {
             return comming_from.clone();
@@ -92,9 +95,9 @@ fn what_line_to_take(car_color: &CarColor, comming_from: &Direction) -> Directio
         }
         CarColor::Blue => match comming_from {
             Direction::North => return Direction::West,
-            Direction::East => return Direction::South,
+            Direction::East => return Direction::North,
             Direction::South => return Direction::East,
-            Direction::West => return Direction::North,
+            Direction::West => return Direction::South,
         },
     }
 }

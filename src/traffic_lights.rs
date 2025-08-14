@@ -33,7 +33,6 @@ impl TrafficLight {
         let (w, h) = size;
         let center = (w / 2, h / 2);
         // let offset = 60; // distance from center / stop line
-        println!("{:?}", center);
 
         // Determine light position based on direction
         let pos = match direction {

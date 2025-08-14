@@ -11,7 +11,7 @@ pub struct Line {
     pub direction: Direction,
 }
 
-#[derive(Eq, Hash, PartialEq, Clone)]
+#[derive(Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Direction {
     North,
     South,

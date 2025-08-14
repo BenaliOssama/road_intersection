@@ -7,7 +7,7 @@ use rand::Rng;
 pub struct Road {
     pub cars: Vec<Car>,
     pub safty: f32,
-    pub stop_lign: (f32, f32),
+    pub stop_lign: f32,
     direction: Direction,
     pub size: (i32, i32),
     // zone 1
@@ -21,12 +21,13 @@ impl Road {
         let stop_offset = 50.0; // distance from intersection center
 
         let stop_lign = match direction {
-            Direction::North => (center.0, center.1 - stop_offset),
-            Direction::South => (center.0, center.1 + stop_offset),
-            Direction::West => (center.0 - stop_offset, center.1),
-            Direction::East => (center.0 + stop_offset, center.1),
-        };
+            Direction::North => center.1 - stop_offset,
+            Direction::South => center.1 + stop_offset,
 
+            Direction::West => center.0 - stop_offset,
+            Direction::East => center.0 + stop_offset,
+        };
+        println!("road {:?} and it's light in {:?}", direction, stop_lign);
         Road {
             cars: Vec::new(),
             safty: 50.0 + 15.0,
@@ -36,20 +37,35 @@ impl Road {
         }
     }
 
-    pub fn car_in_zone(&self) -> Option< &Car> {
-        let zone_length = 50.0; // distance after stop line considered "turn zone"
-        let (stop_x, stop_y) = self.stop_lign;
+    pub fn car_in_zone(&self) -> Option<&Car> {
+        let zone_length = 50.0;
+        let stop = self.stop_lign;
 
-        self.cars.iter().find(|car| {
-            match self.direction {
-                Direction::North => car.y <= stop_y && car.y >= stop_y - zone_length,
-                Direction::South => car.y >= stop_y && car.y <= stop_y + zone_length,
-                Direction::East  => car.x >= stop_x && car.x <= stop_x + zone_length,
-                Direction::West  => car.x <= stop_x && car.x >= stop_x - zone_length,
+        self.cars.iter().find(|car| match self.direction {
+            Direction::North => {
+                let car_head = car.y;
+                let car_teal = car.y;
+
+                (car_head >= stop && car_head <= stop + zone_length)
+                    || (car_head >= stop + zone_length && car_head <= stop + 2.0 * zone_length)
+            }
+
+            Direction::South => {
+                (car.y >= stop && car.y <= stop + zone_length)
+                    || (car.y >= stop + zone_length && car.y <= stop + 2.0 * zone_length)
+            }
+
+            Direction::East => {
+                (car.x <= stop && car.x >= stop - zone_length)
+                    || (car.x <= stop - zone_length && car.x >= stop - 2.0 * zone_length)
+            }
+
+            Direction::West => {
+                (car.x >= stop && car.x <= stop + zone_length)
+                    || (car.x >= stop + zone_length && car.x <= stop + 2.0 * zone_length)
             }
         })
     }
-
 
     pub fn add_new_car(&mut self) {
         let vehicle_length = 50.0;
@@ -76,9 +92,6 @@ impl Road {
             Direction::East => (0, center.1 as i32),
         };
         let car = Car::new(color, x as f32, y as f32, 60.0);
-
-
-
 
         if self.cars.len() == 0 {
             self.cars.push(car);
