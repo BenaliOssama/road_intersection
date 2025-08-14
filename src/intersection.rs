@@ -83,17 +83,21 @@ impl Intersection {
     }
 
     fn clock(&self, dt: f32) -> Direction {
-        // self.lines
-        //     .iter()
-        //     .max_by_key(|(direction, line)| {
-        //         // Replace with urgency calculation
-        //         let waiting_time = line.first_car_wait_time();
-        //         let car_count = line.road.cars.len();
-        //         (waiting_time as u64, car_count as u64)
-        //     })
-        //     .map(|(direction, _)| direction.clone())
-        //     .unwrap_or(Direction::North)
-        Direction::West
+        self.lines
+            .iter()
+            .max_by(|(direction, line), (direction1, line1)| {
+                // Replace with urgency calculation
+                let waiting_time = line.first_car_wait_time();
+                let car_count = line.road.cars.len();
+                if (waiting_time as u64 + car_count as u64 * 10) > (line1.first_car_wait_time() as u64 + line1.road.cars.len() as u64 * 10) {
+                    return std::cmp::Ordering::Greater;
+                } else {
+                    return std::cmp::Ordering::Less;
+                }
+            })
+            .map(|(direction, _)| direction.clone())
+            .unwrap_or(Direction::North)
+        // Direction::West
     }
 }
 

@@ -82,14 +82,13 @@ fn main() {
                     keycode: Some(Keycode::R),
                     ..
                 } => {
-                     let num = rand::thread_rng().gen_range(0..4);
+                     let num = rand::rng().random_range(0..4);
                      match num {
                         0 =>  intersection.add_car_from_direction(Direction::West),
                         1 =>  intersection.add_car_from_direction(Direction::East), 
                         2 =>  intersection.add_car_from_direction(Direction::North), 
                         3 =>  intersection.add_car_from_direction(Direction::South),
-                        _ => (),
-                        
+                        _ => unreachable!(), // since num is always in range 0..4
                      }
                 }
                 _ => {}
