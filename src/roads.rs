@@ -30,14 +30,11 @@ impl Road {
             .iter()
             .map(|car| self.is_before_light(car.clone()))
             .collect();
-        println!(
-            "is car befor light {:?} is it green ? {}",
-            before_light_flags, is_green
-        );
         let moves: Vec<bool> = self
             .cars
             .iter()
-            .map(|car| self.car_can_move(car.clone(), is_green, dt))
+            .enumerate()
+            .map(|(i, car)| self.car_can_move(car.clone(), is_green, dt, i))
             .collect();
 
         for ((car, before_light), can_move) in
@@ -52,20 +49,26 @@ impl Road {
         }
     }
     //
-    pub fn car_can_move(&self, car: Car, is_green: bool, dt: f32) -> bool {
+    pub fn car_can_move(&self, car: Car, is_green: bool, dt: f32, index: usize) -> bool {
         // is there a safe distance
         // is the red and in line
-        if !self.is_safe_to_move(car, is_green, dt) {
+        if !self.is_safe_to_move(car, is_green, dt, index ) {
             return false;
         }
         true
     }
 
-    pub fn is_safe_to_move(&self, car: Car, is_green: bool, dt: f32) -> bool {
+    pub fn is_safe_to_move(&self, car: Car, is_green: bool, dt: f32, index: usize) -> bool {
         if self.car_in_line(car, dt) && !is_green {
             return false;
         }
+
         // is there safe distance
+        if index > 0 {
+            if car.y + self.safty  + dt >= self.cars[index - 1].y {
+                return false;
+            }
+        }
         true
     }
     // is the car in stop line
