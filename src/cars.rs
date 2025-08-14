@@ -65,13 +65,13 @@ impl Car {
                     self.y = 0.0; // wrap around
                 }
             }
-            Direction::West => {
+            Direction::East=> {
                 self.x -= self.speed * dt; // move left
                 if self.x < 0.0 {
                     self.x = 800.0; // wrap around (screen width)
                 }
             }
-            Direction::East => {
+            Direction::West=> {
                 self.x += self.speed * dt; // move right
                 if self.x > 800.0 {
                     self.x = 0.0; // wrap around

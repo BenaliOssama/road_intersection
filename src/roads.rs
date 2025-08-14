@@ -122,13 +122,13 @@ impl Road {
                 car_head <= stop && car_head >= stop - zone_length
             }
                 
+            Direction::East => {
+                    let car_head = car.x;
+                
+                    car_head <= stop && car_head >= stop - zone_length
+                }
+                
                 _=> false,
-            // Direction::East => {
-            //     let car_head = car.x;
-
-            //     car_head >= stop && car_head <= stop - zone_length
-            // }
-
             // Direction::West => {
             //     let car_head = car.x;
 
@@ -152,13 +152,13 @@ impl Road {
                 car_head <= stop && car_head >= stop - zone_length
             }
                 
-                _ => false,
-            // Direction::East => {
-            //     let car_head = car.x;
-
-            //     car_head >= stop && car_head <= stop - zone_length
-            // }
-
+            Direction::East => {
+                let car_head = car.x;
+                let stop = stop - 50.0 ; 
+                car_head <= stop && car_head >= stop - zone_length
+            }
+            
+            _ => false,
             // Direction::West => {
             //     let car_head = car.x;
 
@@ -218,8 +218,8 @@ impl Road {
         let (x, y) = match self.direction {
             Direction::North => (center.0 as i32 - 50, 50),
             Direction::South => (center.0 as i32, self.size.1 - 50),
-            Direction::West => (w, center.1 as i32 - 50),
-            Direction::East => (0, center.1 as i32),
+            Direction::East=> (w, center.1 as i32 - 50),
+            Direction::West=> (0, center.1 as i32),
         };
         let car = Car::new(color, x as f32, y as f32, 60.0);
 

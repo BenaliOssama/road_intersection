@@ -16,8 +16,8 @@ impl Intersection {
         // Directly create and insert lines without cloning
         lines.insert(Direction::North, Line::new(size, Direction::North));
         lines.insert(Direction::South, Line::new(size, Direction::South));
-        lines.insert(Direction::East, Line::new(size, Direction::West));
-        lines.insert(Direction::West, Line::new(size, Direction::East));
+        lines.insert(Direction::West, Line::new(size, Direction::West));
+        lines.insert(Direction::East, Line::new(size, Direction::East));
 
         Intersection {
             lines,
@@ -92,7 +92,7 @@ impl Intersection {
         //     })
         //     .map(|(direction, _)| direction.clone())
         //     .unwrap_or(Direction::North)
-        Direction::South
+        Direction::East
     }
 }
 
