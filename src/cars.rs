@@ -17,6 +17,7 @@ pub struct Car {
     pub y: f32,     // f32 for smooth movement
     pub speed: f32, // f32 for dt multiplication
     pub moving: bool,
+    wait_time : u64, 
 }
 
 impl Car {
@@ -30,6 +31,7 @@ impl Car {
             y,
             speed,
             moving: true,
+            wait_time: 0,
         }
     }
 
@@ -46,6 +48,7 @@ impl Car {
 
     pub fn update(&mut self, dt: f32, direction: Direction) {
         if !self.moving {
+            self.wait_time += dt as u64;
             return;
         }
 
