@@ -17,7 +17,8 @@ pub struct Car {
     pub y: f32,     // f32 for smooth movement
     pub speed: f32, // f32 for dt multiplication
     pub moving: bool,
-    wait_time : u64, 
+    wait_time : u64,
+    pub turned: bool,
 }
 
 impl Car {
@@ -32,6 +33,7 @@ impl Car {
             speed,
             moving: true,
             wait_time: 0,
+            turned: false,
         }
     }
 

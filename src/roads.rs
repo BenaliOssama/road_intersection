@@ -52,7 +52,7 @@ impl Road {
         for ((car, before_light), can_move) in
             self.cars.iter_mut().zip(before_light_flags).zip(moves)
         {
-            if can_move {
+            if can_move || !before_light {
                 car.start();
                 car.update(dt, dir.clone());
             } else {
@@ -179,26 +179,26 @@ impl Road {
             Direction::North => {
                 let car_head = car.y;
                 let stop = stop + 50.0;
-                car_head >= stop && car_head <= stop + zone_length
+                car_head >= stop && car_head <= stop + zone_length && car.turned == false
             }
             Direction::South => {
                 let car_head = car.y;
-                let stop = stop - 50.0 * 2.0;
-                car_head <= stop && car_head >= stop - zone_length
+                let stop = stop - 100.0;
+                car_head <= stop && car_head >= stop - zone_length && car.turned == false
             }
 
             Direction::East => {
                 let car_head = car.x;
                 let stop = stop - 50.0;
-                car_head <= stop && car_head >= stop - zone_length
+                car_head <= stop && car_head >= stop - zone_length && car.turned == false
             }
 
-            _ => false,
-            // Direction::West => {
-            //     let car_head = car.x;
+            Direction::West => {
+                let car_head = car.x;
 
-            //     car_head >= stop && car_head <= stop + zone_length
-            // }
+                car_head >= stop && car_head <= stop + zone_length && car.turned == false
+            }
+            _ => false,
         })
     }
 

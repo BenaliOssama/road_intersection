@@ -67,15 +67,16 @@ impl Intersection {
                 }
             }
             if is_green == *direct {
-                line.update(dt, false);
+                line.update(dt, true);
             } else {
                 line.update(dt, false);
             }
         }
 
         // Now perform the moves
-        for (take_line, car) in moves {
+        for (take_line,mut car) in moves {
             if let Some(line) = self.lines.get_mut(&take_line) {
+                car.turned = true;
                 line.add_car(car);
             }
         }
