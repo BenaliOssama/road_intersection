@@ -93,7 +93,7 @@ impl Road {
         println!("road {:?} and it's light in {:?}", direction, stop_lign);
         Road {
             cars: Vec::new(),
-            safty: 50.0 + 15.0,
+            safty: 50.0 + 20.0,
             stop_lign,
             direction,
             size,

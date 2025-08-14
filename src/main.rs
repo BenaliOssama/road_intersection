@@ -12,6 +12,9 @@ use crate::lines::*;//Line::Direction;
 use sdl2::{event::Event, init, keyboard::Keycode, pixels::Color};
 use std::time::Instant;
 
+
+const Safty : f32 = 50.0; // immutable
+
 fn main() {
     let sdl_context = init().unwrap();
     let video_subsystem = sdl_context.video().unwrap();

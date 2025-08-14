@@ -69,7 +69,9 @@ impl Intersection {
     }
 
     fn clock(&mut self, dt: f32) -> bool {
-        false
+        true
+        // find out the most eargent
+        // ask every line see the most eargent to start light for it 
     }
 }
 
